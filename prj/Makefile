@@ -30,7 +30,8 @@ else
 endif
 
 CFLAGS += \
-	-I$(TARGET_PATH_INCLUDE)
+	-I$(TARGET_PATH_INCLUDE) \
+	-I../vendor/include
 
 OBJECTS += \
 	main.o \
