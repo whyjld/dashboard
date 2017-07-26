@@ -1,0 +1,61 @@
+APPNAME		:= dashboard
+DESTDIR		?= ../bin
+SRCDIR		?= ../src
+OBJDIR		?= ../obj
+
+vpath %.c $(SRCDIR)
+vpath %cpp $(SRCDIR)
+vpath %.o $(OBJDIR)
+
+# Make command to use for dependencies
+#CC = $(CROSS_COMPILE)gcc
+#AR = $(CROSS_COMPILE)ar
+
+TARGET_PATH_LIB = $(SDKTARGETSYSROOT)/usr/lib
+TARGET_PATH_INCLUDE = $(SDKTARGETSYSROOT)/usr/include
+#COMMON_DIR=../common
+
+BIN = $(DESTDIR)/$(APPNAME)
+
+CFLAGS = -DDEBUG -D_DEBUG -D_GNU_SOURCE -fPIC -O3 -fno-strict-aliasing -fno-optimize-sibling-calls -Wall -g
+
+CFLAGS += $(CFLAGS_EGL)
+
+CFLAGS += \
+	-DLINUX \
+	-DEGL_USE_X11
+
+#CFLAGS += \
+#	-DLINUX \
+#	-DEGL_API_FB \
+
+CFLAGS += \
+	-I$(TARGET_PATH_INCLUDE)
+
+OBJECTS += \
+	main.o \
+	fslegl.o
+
+
+DEPS = -lstdc++ -lm -lGLESv2 -lEGL -lX11 -ldl -Wl,--library-path=$(TARGET_PATH_LIB),-rpath-link=$(TARGET_PATH_LIB)
+#DEPS = -lstdc++ -lm -lGLESv2 -lEGL  -ldl -Wl,--library-path=$(TARGET_PATH_LIB),-rpath-link=$(TARGET_PATH_LIB)
+$(BIN) : $(OBJECTS)
+	@echo " LD " $@
+	$(QUIET)$(CC) -o $(BIN) $(addprefix $(OBJDIR)/,$(OBJECTS)) $(DEPS)
+
+%.o : %.c
+	@echo " CC " $@
+	$(QUIET)$(CC) $(CFLAGS) -MMD -c $< -o $(OBJDIR)/$@
+
+%.o : %.cpp
+	@echo " CXX " $@
+	$(QUIET)$(CC) $(CFLAGS) -MMD -c $< -o $(OBJDIR)/$@
+
+clean:
+	rm -f $(addprefix $(OBJDIR)/,$(OBJECTS)) *~ $(addprefix $(OBJDIR)/,$(OBJECTS:.o=.d)) $(BIN)
+	
+install:
+	cp -f $(APPNAME) $(DESTDIR)/.
+	
+	
+-include $(OBJECTS_TUT:.o=.d)
