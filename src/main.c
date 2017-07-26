@@ -164,6 +164,7 @@ int init(void)
 	eglMakeCurrent(egldisplay, eglsurface, eglsurface, eglcontext);
 	assert(eglGetError() == EGL_SUCCESS);
 
+	printf("Extensions:%s", glGetString(GL_EXTENSIONS));
 	{
 		// Compile the shaders
 		GLuint hVertexShader = glCreateShader( GL_VERTEX_SHADER );

@@ -4,7 +4,7 @@ SRCDIR		?= ../src
 OBJDIR		?= ../obj
 
 vpath %.c $(SRCDIR)
-vpath %cpp $(SRCDIR)
+vpath %.cpp $(SRCDIR)
 vpath %.o $(OBJDIR)
 
 # Make command to use for dependencies
@@ -21,13 +21,13 @@ CFLAGS = -DDEBUG -D_DEBUG -D_GNU_SOURCE -fPIC -O3 -fno-strict-aliasing -fno-opti
 
 CFLAGS += $(CFLAGS_EGL)
 
-CFLAGS += \
-	-DLINUX \
-	-DEGL_USE_X11
+CFLAGS += -DLINUX
 
-#CFLAGS += \
-#	-DLINUX \
-#	-DEGL_API_FB \
+ifeq ($(ARCH),arm)
+	CFLAGS += -DEGL_API_FB
+else
+	CFLAGS += -DEGL_USE_X11
+endif
 
 CFLAGS += \
 	-I$(TARGET_PATH_INCLUDE)
@@ -36,9 +36,12 @@ OBJECTS += \
 	main.o \
 	fslegl.o
 
+ifeq ($(ARCH),arm)
+	DEPS = -lstdc++ -lm -lGLESv2 -lEGL  -ldl -Wl,--library-path=$(TARGET_PATH_LIB),-rpath-link=$(TARGET_PATH_LIB)
+else
+	DEPS = -lstdc++ -lm -lGLESv2 -lEGL -lX11 -ldl -Wl,--library-path=$(TARGET_PATH_LIB),-rpath-link=$(TARGET_PATH_LIB)
+endif
 
-DEPS = -lstdc++ -lm -lGLESv2 -lEGL -lX11 -ldl -Wl,--library-path=$(TARGET_PATH_LIB),-rpath-link=$(TARGET_PATH_LIB)
-#DEPS = -lstdc++ -lm -lGLESv2 -lEGL  -ldl -Wl,--library-path=$(TARGET_PATH_LIB),-rpath-link=$(TARGET_PATH_LIB)
 $(BIN) : $(OBJECTS)
 	@echo " LD " $@
 	$(QUIET)$(CC) -o $(BIN) $(addprefix $(OBJDIR)/,$(OBJECTS)) $(DEPS)
