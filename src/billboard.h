@@ -1,9 +1,9 @@
 #ifndef _BILLBOARD_h_
 #define _BILLBOARD_h_
 
-#include "GLES3/gl3.h"
-#include "GLES3/gl3ext.h"
-#include "EGL/egl.h"
+#include <GLES3/gl3.h>
+#include <GLES3/gl3ext.h>
+#include <EGL/egl.h>
 
 struct ItemInfo
 {
@@ -20,6 +20,8 @@ public:
 	
 	ItemInfo CreateItems(GLsizei count) const;
 	void SetItemsAttribute(const ItemInfo& items, const float* pt, size_t count) const;
+	
+	void SetLogicSize(GLsizei width, GLsizei height);
 
 	void Begin() const;
 	void SetAlpha(float alpha);
@@ -51,6 +53,7 @@ private:
 
 	GLuint m_PTLocation;
 	GLuint m_AlphaLocation;
+	GLuint m_VPLocation;
 
 	GLuint m_Program;
 };

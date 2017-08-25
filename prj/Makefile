@@ -17,11 +17,15 @@ TARGET_PATH_INCLUDE = $(SDKTARGETSYSROOT)/usr/include
 
 BIN = $(DESTDIR)/$(APPNAME)
 
-CFLAGS = -DDEBUG -D_DEBUG -D_GNU_SOURCE -fPIC -O3 -fno-strict-aliasing -fno-optimize-sibling-calls -Wall -g
-
+CFLAGS = -D_GNU_SOURCE -fPIC -fno-strict-aliasing -fno-optimize-sibling-calls -Wall -g
 CFLAGS += $(CFLAGS_EGL)
-
 CFLAGS += -DLINUX
+
+ifeq ($(DEBUG),1)
+	CFLAGS += -DDEBUG -D_DEBUG 
+else
+	CFLAGS += -O3 
+endif
 
 ifeq ($(ARCH),arm)
 	CFLAGS += -DEGL_API_FB
@@ -33,9 +37,15 @@ CFLAGS += \
 	-I$(TARGET_PATH_INCLUDE) \
 	-I../vendor/include
 
+CPPFLAGS = -std=c++11
+CPPFLAGS += $(CFLAGS)
+
 OBJECTS += \
 	main.o \
-	fslegl.o
+	fslegl.o \
+	tga.o \
+	texrect.o \
+	billboard.o
 
 ifeq ($(ARCH),arm)
 	DEPS = -lstdc++ -lm -lGLESv2 -lEGL  -ldl -Wl,--library-path=$(TARGET_PATH_LIB),-rpath-link=$(TARGET_PATH_LIB)
@@ -53,7 +63,7 @@ $(BIN) : $(OBJECTS)
 
 %.o : %.cpp
 	@echo " CXX " $@
-	$(QUIET)$(CC) $(CFLAGS) -MMD -c $< -o $(OBJDIR)/$@
+	$(QUIET)$(CC) $(CPPFLAGS) -MMD -c $< -o $(OBJDIR)/$@
 
 clean:
 	rm -f $(addprefix $(OBJDIR)/,$(OBJECTS)) *~ $(addprefix $(OBJDIR)/,$(OBJECTS:.o=.d)) $(BIN)

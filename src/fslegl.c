@@ -48,7 +48,6 @@ EGLNativeDisplayType fsl_getNativeDisplay()
 	EGLNativeDisplayType eglNativeDisplayType = NULL;
 #if (defined EGL_USE_X11)
 	eglNativeDisplayType = XOpenDisplay(NULL);
-	assert(eglNativeDisplayType != NULL);
 #elif (defined EGL_API_FB)
 	eglNativeDisplayType = fbGetDisplayByIndex(0); //Pass the argument as required to show the framebuffer	
 #else	

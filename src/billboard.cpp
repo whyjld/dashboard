@@ -7,7 +7,7 @@
 Billboard::Billboard(GLsizei count)
  : m_ItemCount(count)
  , m_Width(0)
- , m_Height(1)
+ , m_Height(0)
 {
 	InitEGL();
 
@@ -86,6 +86,8 @@ void Billboard::InitEGL()
 	
 	m_Width = width;
 	m_Height = height;
+	
+	std::cout << "Width:" << m_Width << ", Height:" << m_Height << std::endl;
 }
 
 void Billboard::CleanUpEGL()
@@ -162,9 +164,10 @@ void Billboard::InitShaders()
 		\n
 		out vec2 tc; \n
 		\n
+		uniform vec4 vp;\n
 		void main()\n
 		{ \n
-			gl_Position = vec4(pt.xy, 0.0, 1.0); \n
+			gl_Position = vec4(pt.xy * vp.zw + vp.xy, 0.0, 1.0); \n
 			tc = pt.zw; \n
 		}\n
 	);
@@ -200,6 +203,8 @@ void Billboard::InitShaders()
 
 	m_AlphaLocation = glGetUniformLocation(m_Program, "alpha");
 	glUniform1f(m_AlphaLocation, 1.0f);
+
+	m_VPLocation = glGetUniformLocation(m_Program, "vp");
 
 	glUseProgram(m_Program);
 }
@@ -307,6 +312,30 @@ void Billboard::SetItemsAttribute(const ItemInfo& items, const float* pt, size_t
 {
 	glBindBuffer(GL_ARRAY_BUFFER, items.PT);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * count * 4, pt);
+}
+
+void Billboard::SetLogicSize(GLsizei width, GLsizei height)
+{
+	float r = float(width) / float(height);
+
+	GLint vx, vy;
+	GLsizei vw, vh;
+	if(float(m_Width) / float(m_Height) > r)
+	{
+		vy = 0;
+		vh = m_Height;
+		vw = GLsizei(m_Height * r);
+		vx = GLint(m_Width - vw) / 2;
+	}
+	else
+	{
+		vx = 0;
+		vw = m_Width;
+		vh = GLsizei(m_Width * r);
+		vy = GLint(m_Height - vh) / 2;
+	}
+	glViewport(vx, vy, vw, vh);
+	glUniform4f(m_VPLocation, -1.0f, -1.0f, 2.0f / width, 2.0f / height);
 }
 
 void Billboard::Begin() const
