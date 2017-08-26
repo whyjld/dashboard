@@ -42,16 +42,22 @@ CPPFLAGS += $(CFLAGS)
 
 OBJECTS += \
 	main.o \
-	fslegl.o \
 	tga.o \
 	texrect.o \
 	dashboard.o \
 	billboard.o
-
+	
 ifeq ($(ARCH),arm)
+	OBJECTS += eglc.o
 	DEPS = -lstdc++ -lm -lGLESv2 -lEGL  -ldl -Wl,--library-path=$(TARGET_PATH_LIB),-rpath-link=$(TARGET_PATH_LIB)
 else
-	DEPS = -lstdc++ -lm -lGLESv2 -lEGL -lX11 -ldl -Wl,--library-path=$(TARGET_PATH_LIB),-rpath-link=$(TARGET_PATH_LIB)
+	ifeq ($(API),GL)
+		OBJECTS += glxc.o
+		DEPS = -lstdc++ -lm -lGL -lX11 -ldl -Wl,--library-path=$(TARGET_PATH_LIB),-rpath-link=$(TARGET_PATH_LIB)
+	else
+		OBJECTS += eglc.o
+		DEPS = -lstdc++ -lm -lGLESv2 -lEGL -lX11 -ldl -Wl,--library-path=$(TARGET_PATH_LIB),-rpath-link=$(TARGET_PATH_LIB)
+	endif
 endif
 
 $(BIN) : $(OBJECTS)

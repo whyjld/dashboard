@@ -1,24 +1,12 @@
 ﻿#include "billboard.h"
-#include "fslegl.h"
 #include <vector>
 #include <iostream>
 #include <stdexcept>
 
-PFNGLTEXDIRECTVIV glTexDirectVIV = NULL;
-PFNGLTEXDIRECTINVALIDATEVIV glTexDirectInvalidateVIV = NULL;
-
 Billboard::Billboard(GLsizei count)
  : m_ItemCount(count)
- , m_Width(0)
- , m_Height(0)
 {
-	InitEGL();
-
-	glPixelStorei(GL_PACK_ALIGNMENT, 1);
-	glDepthFunc(GL_LESS);
-	glDisable(GL_DEPTH_TEST);
-
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	InitGL();
 
 	InitIndices();
 	InitShaders();
@@ -29,90 +17,30 @@ Billboard::~Billboard()
 	glDeleteBuffers(1, &m_Indices);
 	glDeleteProgram(m_Program);
 	
-	CleanUpEGL();
+	CleanUpGL();
 }
 
-void Billboard::InitEGL()
+void Billboard::InitGL()
 {
-	m_NativeDisplay = fsl_getNativeDisplay();
-	m_Display = eglGetDisplay(m_NativeDisplay);
-	if (nullptr == m_Display)
-	{
-		throw std::runtime_error("Can't get display.");
-	}
-	eglInitialize(m_Display, nullptr, nullptr);
-	eglBindAPI(EGL_OPENGL_ES_API);
-
-	static const EGLint config[] =
-	{
-		EGL_RED_SIZE,	5,
-		EGL_GREEN_SIZE, 6,
-		EGL_BLUE_SIZE,	5,
-		EGL_ALPHA_SIZE, 0,
-		EGL_SAMPLES,	0,
-		EGL_NONE,       EGL_NONE,
-	};
-
-	EGLint numconfigs;
-	EGLConfig eglconfig;
-	eglChooseConfig(m_Display, config, &eglconfig, 1, &numconfigs);
-	if(0 == numconfigs)
-	{
-		throw std::runtime_error("Can't choose config.");
-	}
-
-	m_NativeWindow = fsl_createwindow(m_Display, m_NativeDisplay);	
-	if ((EGLNativeWindowType)0 == m_NativeWindow)
-	{
-		throw std::runtime_error("Can't create native window.");
-	}
-
-	m_Surface = eglCreateWindowSurface(m_Display, eglconfig, m_NativeWindow, nullptr);
-	if (nullptr == m_Surface)
-	{
-		throw std::runtime_error("Can't create surface.");
-	}
-
-	EGLint ContextAttribList[] = { EGL_CONTEXT_CLIENT_VERSION, 3, EGL_NONE };
-	m_Context = eglCreateContext( m_Display, eglconfig, EGL_NO_CONTEXT, ContextAttribList );
-	eglMakeCurrent(m_Display, m_Surface, m_Surface, m_Context);
-	
-	if (nullptr == glTexDirectVIV)
-	{
-		glTexDirectVIV = (PFNGLTEXDIRECTVIV)eglGetProcAddress("glTexDirectVIV");
-	}
-
-	if (nullptr == glTexDirectInvalidateVIV)
-	{
-		glTexDirectInvalidateVIV = (PFNGLTEXDIRECTINVALIDATEVIV)eglGetProcAddress("glTexDirectInvalidateVIV");
-	}
-
 	std::cout << "Vendor:" << glGetString(GL_VENDOR) << std::endl;
 	std::cout << "Renderer:" << glGetString(GL_RENDERER) << std::endl;
 	std::cout << "Version:" << glGetString(GL_VERSION) << std::endl;
 	std::cout << "Extensions:" << glGetString(GL_EXTENSIONS) << std::endl;
+#if defined(USE_OGL)
+#else	
+	std::cout << "Width:" << m_Context.GetWidth() << ", Height:" << m_Context.GetHeight() << std::endl;
+#endif
+	
+	glPixelStorei(GL_PACK_ALIGNMENT, 1);
+	glDepthFunc(GL_LESS);
+	glDisable(GL_DEPTH_TEST);
 
-	EGLint width = 0;
-	EGLint height = 0;
-	eglQuerySurface(m_Display, m_Surface, EGL_WIDTH, &width);
-	eglQuerySurface(m_Display, m_Surface, EGL_HEIGHT, &height);
-	
-	m_Width = width;
-	m_Height = height;
-	
-	std::cout << "Width:" << m_Width << ", Height:" << m_Height << std::endl;
-	
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
 }
 
-void Billboard::CleanUpEGL()
+void Billboard::CleanUpGL()
 {
-	eglMakeCurrent(m_Display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
-	eglDestroyContext(m_Display, m_Context);
-	eglDestroySurface(m_Display, m_Surface);	
-	fsl_destroywindow(m_NativeWindow, m_NativeDisplay);
-	eglTerminate(m_Display);
-	eglReleaseThread();	
 }
 
 GLuint Billboard::CreateVAO(GLuint pt) const
@@ -374,5 +302,5 @@ void Billboard::Draw(const ItemInfo& items, size_t count)
 
 void Billboard::End() const
 {
-	eglSwapBuffers(m_Display, m_Surface);
+	m_Context.SwapBuffers();
 }
