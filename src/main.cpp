@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 #include <cmath>
 #include <signal.h>
 
@@ -18,16 +19,11 @@ int main (void)
 	signal(SIGTERM, sighandler);
 
 	Billboard billboard(256);
-	TexRect   texrect("./", "texture1.json");
-	
-	RectItem item(texrect.GetTexRect("background"), &billboard);
-	
-	billboard.SetLogicSize(1920, 720);
+	DashBoard dashboard(&billboard);
+		
 	while (!quit)
 	{
-		billboard.Begin();
-			item.Draw();		
-		billboard.End();
+		dashboard.Draw();
 	}
 	return 0;
 }

@@ -156,7 +156,7 @@ Window OGLContext::Createwindow(Display* display, GLXFBConfig& config)
 	XFree(fbc);
 
 	XVisualInfo *vi = glXGetVisualFromFBConfig(display, config);
-	std::cout << "Chosen visual ID = 0x" << std::hex << vi->visualid << std::endl;
+	std::cout << "Chosen visual ID = 0x" << std::hex << vi->visualid << std::dec << std::endl;
 
 	XSetWindowAttributes swa;
 
@@ -167,7 +167,7 @@ Window OGLContext::Createwindow(Display* display, GLXFBConfig& config)
 
 	Window win = XCreateWindow(display,
 	                          RootWindow(display, vi->screen), 
-                              0, 0, 100, 100, 0, vi->depth, InputOutput, 
+                              0, 0, 1280, 720, 0, vi->depth, InputOutput, 
                               vi->visual, 
                               CWBorderPixel | CWColormap | CWEventMask,
                               &swa);

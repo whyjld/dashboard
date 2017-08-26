@@ -36,8 +36,9 @@ void Billboard::InitGL()
 	glDepthFunc(GL_LESS);
 	glDisable(GL_DEPTH_TEST);
 
+	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 }
 
 void Billboard::CleanUpGL()
@@ -129,7 +130,8 @@ void Billboard::InitShaders()
 		\n
 		void main()\n
 		{ \n
-			fragColor = vec4(texture2D(tex, tc).rgb, alpha); \n
+			fragColor = texture(tex, tc);\n
+			fragColor.a *= alpha; \n
 			if (fragColor.a < 0.01) \n
 			{ \n
 				discard; \n
@@ -252,7 +254,7 @@ ItemInfo Billboard::CreateItems(GLsizei count) const
 	return ret;
 }
 
-void Billboard::SetItemsAttribute(const ItemInfo& items, const float* pt, size_t count) const
+void Billboard::SetItemsAttribute(const ItemInfo& items, const float* pt, GLsizei count) const
 {
 	glBindBuffer(GL_ARRAY_BUFFER, items.PT);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * count * 4, pt);
@@ -275,7 +277,7 @@ void Billboard::SetLogicSize(GLsizei width, GLsizei height)
 	{
 		vx = 0;
 		vw = m_Context.GetWidth();
-		vh = GLsizei(m_Context.GetWidth() * r);
+		vh = GLsizei(m_Context.GetWidth() / r);
 		vy = GLint(m_Context.GetHeight() - vh) / 2;
 	}
 	glViewport(vx, vy, vw, vh);
@@ -295,7 +297,7 @@ void Billboard::SetAlpha(float alpha)
 	glUniform1f(m_AlphaLocation, alpha);
 }
 
-void Billboard::Draw(const ItemInfo& items, size_t count)
+void Billboard::Draw(const ItemInfo& items, GLsizei count)
 {
 	glBindVertexArray(items.VAO);
 	glDrawElements(GL_TRIANGLE_STRIP, 4 * count, GL_UNSIGNED_SHORT, nullptr);

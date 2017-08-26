@@ -17,13 +17,13 @@ public:
 	~Billboard();
 	
 	ItemInfo CreateItems(GLsizei count) const;
-	void SetItemsAttribute(const ItemInfo& items, const float* pt, size_t count) const;
+	void SetItemsAttribute(const ItemInfo& items, const float* pt, GLsizei count) const;
 
 	void SetLogicSize(GLsizei width, GLsizei height);
 
 	void Begin() const;
 	void SetAlpha(float alpha);
-	void Draw(const ItemInfo& items, size_t count);
+	void Draw(const ItemInfo& items, GLsizei count);
 	void End() const;
 private:
 	void InitGL();
