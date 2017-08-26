@@ -1,8 +1,8 @@
-#include "texrect.h"
-#include "tga.h"
 #include <rapidjson/document.h>
 #include <stdexcept>
 #include <iostream>
+#include "texrect.h"
+#include "tga.h"
 
 #define GET_VALUE(v, p, n, t, m) \
 { \

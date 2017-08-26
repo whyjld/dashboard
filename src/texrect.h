@@ -3,7 +3,7 @@
 
 #include <map>
 #include <string>
-#include <GLES3/gl3.h>
+#include "gli.h"
 
 struct TexInfo
 {

@@ -20,13 +20,13 @@ typedef void (GL_APIENTRY *PFNGLTEXDIRECTINVALIDATEVIV) (GLenum Target);
 extern PFNGLTEXDIRECTVIV glTexDirectVIV;
 extern PFNGLTEXDIRECTINVALIDATEVIV glTexDirectInvalidateVIV;
 
-class EGLC
+class OGLContext
 {
 public:
-	EGLC();
-	EGLC(EGLC&) = delete;
+	OGLContext();
+	OGLContext(OGLContext&) = delete;
 	
-	~EGLC();
+	~OGLContext();
 	
 	void SwapBuffers() const;
 	

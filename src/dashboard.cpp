@@ -44,8 +44,8 @@ void RectItem::SetAttribute(float x, float y)
 
 	buffer[3 * 4 + 0] = x + m_TexInfo.Width;
 	buffer[3 * 4 + 1] = y;
-	buffer[2 * 4 + 2] = m_TexInfo.Right;
-	buffer[2 * 4 + 3] = m_TexInfo.Bottom;
+	buffer[3 * 4 + 2] = m_TexInfo.Right;
+	buffer[3 * 4 + 3] = m_TexInfo.Bottom;
 	
 	m_BB->SetItemsAttribute(m_ItemInfo, buffer, 4);	
 }

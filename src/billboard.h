@@ -36,12 +36,9 @@ private:
 
 	GLuint CreateProgram(const char* vss, const char* pss);
 	
-	EGLC m_Context;
+	OGLContext m_Context;
 
 	GLsizei m_ItemCount;
-		
-	GLuint m_Width;
-	GLuint m_Height;
 
 	GLuint m_Indices;
 

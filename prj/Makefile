@@ -37,9 +37,6 @@ CFLAGS += \
 	-I$(TARGET_PATH_INCLUDE) \
 	-I../vendor/include
 
-CPPFLAGS = -std=c++11
-CPPFLAGS += $(CFLAGS)
-
 OBJECTS += \
 	main.o \
 	tga.o \
@@ -51,14 +48,18 @@ ifeq ($(ARCH),arm)
 	OBJECTS += eglc.o
 	DEPS = -lstdc++ -lm -lGLESv2 -lEGL  -ldl -Wl,--library-path=$(TARGET_PATH_LIB),-rpath-link=$(TARGET_PATH_LIB)
 else
-	ifeq ($(API),GL)
+	ifeq ($(API),gl)
+		CFLAGS += -DUSE_OGL
 		OBJECTS += glxc.o
-		DEPS = -lstdc++ -lm -lGL -lX11 -ldl -Wl,--library-path=$(TARGET_PATH_LIB),-rpath-link=$(TARGET_PATH_LIB)
+		DEPS = -lstdc++ -lm -lGLEW -lGL -lX11 -ldl -Wl,--library-path=$(TARGET_PATH_LIB),-rpath-link=$(TARGET_PATH_LIB)
 	else
 		OBJECTS += eglc.o
 		DEPS = -lstdc++ -lm -lGLESv2 -lEGL -lX11 -ldl -Wl,--library-path=$(TARGET_PATH_LIB),-rpath-link=$(TARGET_PATH_LIB)
 	endif
 endif
+
+CPPFLAGS = -std=c++11
+CPPFLAGS += $(CFLAGS)
 
 $(BIN) : $(OBJECTS)
 	@echo " LD " $@

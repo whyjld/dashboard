@@ -14,7 +14,7 @@
 PFNGLTEXDIRECTVIV glTexDirectVIV = NULL;
 PFNGLTEXDIRECTINVALIDATEVIV glTexDirectInvalidateVIV = NULL;
 
-EGLC::EGLC()
+OGLContext::OGLContext()
 {
 	m_NativeDisplay = GetNativeDisplay();
 	m_Display = eglGetDisplay(m_NativeDisplay);
@@ -78,7 +78,7 @@ EGLC::EGLC()
 	m_Height = height;
 }
 
-EGLC::~EGLC()
+OGLContext::~OGLContext()
 {
 	eglMakeCurrent(m_Display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
 	eglDestroyContext(m_Display, m_Context);
@@ -88,12 +88,12 @@ EGLC::~EGLC()
 	eglReleaseThread();	
 }
 
-void EGLC::SwapBuffers() const
+void OGLContext::SwapBuffers() const
 {
 	eglSwapBuffers(m_Display, m_Surface);
 }
 
-EGLNativeDisplayType EGLC::GetNativeDisplay()
+EGLNativeDisplayType OGLContext::GetNativeDisplay()
 {
 	EGLNativeDisplayType eglNativeDisplayType = NULL;
 #if (defined EGL_USE_X11)
@@ -106,7 +106,7 @@ EGLNativeDisplayType EGLC::GetNativeDisplay()
 	return eglNativeDisplayType;
 }
 
-EGLNativeWindowType EGLC::Createwindow(EGLDisplay egldisplay, EGLNativeDisplayType eglNativeDisplayType)
+EGLNativeWindowType OGLContext::Createwindow(EGLDisplay egldisplay, EGLNativeDisplayType eglNativeDisplayType)
 {
 	EGLNativeWindowType native_window = (EGLNativeWindowType)0;
 
@@ -140,7 +140,7 @@ EGLNativeWindowType EGLC::Createwindow(EGLDisplay egldisplay, EGLNativeDisplayTy
 }
 
 
-void EGLC::Destroywindow(EGLNativeWindowType eglNativeWindowType, EGLNativeDisplayType eglNativeDisplayType)
+void OGLContext::Destroywindow(EGLNativeWindowType eglNativeWindowType, EGLNativeDisplayType eglNativeDisplayType)
 {
 	(void) eglNativeWindowType;
 #if (defined EGL_USE_X11)

@@ -25,11 +25,12 @@ void Billboard::InitGL()
 	std::cout << "Vendor:" << glGetString(GL_VENDOR) << std::endl;
 	std::cout << "Renderer:" << glGetString(GL_RENDERER) << std::endl;
 	std::cout << "Version:" << glGetString(GL_VERSION) << std::endl;
-	std::cout << "Extensions:" << glGetString(GL_EXTENSIONS) << std::endl;
-#if defined(USE_OGL)
-#else	
+	const char* exts = (const char*)glGetString(GL_EXTENSIONS);
+	if(nullptr != exts)
+	{
+		std::cout << "Extensions:" << exts << std::endl;
+	}
 	std::cout << "Width:" << m_Context.GetWidth() << ", Height:" << m_Context.GetHeight() << std::endl;
-#endif
 	
 	glPixelStorei(GL_PACK_ALIGNMENT, 1);
 	glDepthFunc(GL_LESS);
@@ -55,7 +56,7 @@ GLuint Billboard::CreateVAO(GLuint pt) const
 	
 	glEnableVertexAttribArray(m_PTLocation);
 	glBindBuffer(GL_ARRAY_BUFFER, pt);
-	glVertexAttribPointer(m_PTLocation, 2, GL_UNSIGNED_SHORT, GL_TRUE, 0, (void*)0);
+	glVertexAttribPointer(m_PTLocation, 4, GL_FLOAT, GL_FALSE, 0, (void*)0);
 	
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_Indices);
 
@@ -263,27 +264,27 @@ void Billboard::SetLogicSize(GLsizei width, GLsizei height)
 
 	GLint vx, vy;
 	GLsizei vw, vh;
-	if(float(m_Width) / float(m_Height) > r)
+	if(float(m_Context.GetWidth()) / float(m_Context.GetHeight()) > r)
 	{
 		vy = 0;
-		vh = m_Height;
-		vw = GLsizei(m_Height * r);
-		vx = GLint(m_Width - vw) / 2;
+		vh = m_Context.GetHeight();
+		vw = GLsizei(m_Context.GetHeight() * r);
+		vx = GLint(m_Context.GetWidth() - vw) / 2;
 	}
 	else
 	{
 		vx = 0;
-		vw = m_Width;
-		vh = GLsizei(m_Width * r);
-		vy = GLint(m_Height - vh) / 2;
+		vw = m_Context.GetWidth();
+		vh = GLsizei(m_Context.GetWidth() * r);
+		vy = GLint(m_Context.GetHeight() - vh) / 2;
 	}
 	glViewport(vx, vy, vw, vh);
+	glUseProgram(m_Program);
 	glUniform4f(m_VPLocation, -1.0f, -1.0f, 2.0f / width, 2.0f / height);
 }
 
 void Billboard::Begin() const
 {
-	glViewport(0, 0, m_Width, m_Height);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glUseProgram(m_Program);

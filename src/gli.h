@@ -2,9 +2,7 @@
 #define _GLI_h_
 
 #if defined(USE_OGL)
-	#include <GL/gl.h>
-	#include <GL/glext.h>
-	#include <GL/glx.h>
+	#include "glxc.h"
 #else
 	#include "eglc.h"
 #endif
