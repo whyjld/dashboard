@@ -4,6 +4,9 @@
 #include <iostream>
 #include <stdexcept>
 
+PFNGLTEXDIRECTVIV glTexDirectVIV = NULL;
+PFNGLTEXDIRECTINVALIDATEVIV glTexDirectInvalidateVIV = NULL;
+
 Billboard::Billboard(GLsizei count)
  : m_ItemCount(count)
  , m_Width(0)
@@ -73,6 +76,16 @@ void Billboard::InitEGL()
 	EGLint ContextAttribList[] = { EGL_CONTEXT_CLIENT_VERSION, 3, EGL_NONE };
 	m_Context = eglCreateContext( m_Display, eglconfig, EGL_NO_CONTEXT, ContextAttribList );
 	eglMakeCurrent(m_Display, m_Surface, m_Surface, m_Context);
+	
+	if (nullptr == glTexDirectVIV)
+	{
+		glTexDirectVIV = (PFNGLTEXDIRECTVIV)eglGetProcAddress("glTexDirectVIV");
+	}
+
+	if (nullptr == glTexDirectInvalidateVIV)
+	{
+		glTexDirectInvalidateVIV = (PFNGLTEXDIRECTINVALIDATEVIV)eglGetProcAddress("glTexDirectInvalidateVIV");
+	}
 
 	std::cout << "Vendor:" << glGetString(GL_VENDOR) << std::endl;
 	std::cout << "Renderer:" << glGetString(GL_RENDERER) << std::endl;
@@ -88,6 +101,8 @@ void Billboard::InitEGL()
 	m_Height = height;
 	
 	std::cout << "Width:" << m_Width << ", Height:" << m_Height << std::endl;
+	
+	glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
 }
 
 void Billboard::CleanUpEGL()

@@ -45,6 +45,7 @@ OBJECTS += \
 	fslegl.o \
 	tga.o \
 	texrect.o \
+	dashboard.o \
 	billboard.o
 
 ifeq ($(ARCH),arm)

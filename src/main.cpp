@@ -5,8 +5,7 @@
 #include "GLES2/gl2.h"
 #include "GLES2/gl2ext.h"
 
-#include "billboard.h"
-#include "texrect.h"
+#include "dashboard.h"
 
 volatile sig_atomic_t quit = 0;
 
@@ -24,9 +23,13 @@ int main (void)
 	Billboard billboard(256);
 	TexRect   texrect("./", "texture1.json");
 	
+	RectItem item(texrect.GetTexRect("background"), &billboard);
+	
+	billboard.SetLogicSize(1920, 720);
 	while (!quit)
 	{
 		billboard.Begin();
+			item.Draw();		
 		billboard.End();
 	}
 	return 0;

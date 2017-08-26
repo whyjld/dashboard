@@ -8,6 +8,7 @@
 struct TexInfo
 {
 	GLuint Tex;
+	GLsizei Width, Height;
 	float Left, Right, Bottom, Top;
 };
 

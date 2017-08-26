@@ -80,6 +80,8 @@ TexRect::TexRect(const char* path, const char* file)
 		TexInfo info = 
 		{
 			m_Texture,
+			tw,
+			th,
 			float(tx - 1) / (width - 1),
 			float(tx - 1 + tw) / (width - 1),
 			float(ty - 1) / (height - 1),
@@ -97,7 +99,7 @@ TexRect::~TexRect()
 
 TexInfo TexRect::GetTexRect(const char* name)
 {
-	TexInfo ret = {0, 0.0f, 0.0f, 0.0f, 0.0f};
+	TexInfo ret = {0, 0, 0, 0.0f, 0.0f, 0.0f, 0.0f};
 	auto i = m_Rects.find(name);
 	if(i != m_Rects.end())
 	{
