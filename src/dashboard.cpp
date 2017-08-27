@@ -208,6 +208,8 @@ DashBoard::DashBoard(Billboard* bb)
  , m_Center(m_Textures.GetTexRect("center"), m_Billboard)
  , m_Mph(m_Textures.GetTexRect("mph"), m_Billboard)
  , m_EngineSpeed(m_Textures.GetTexRect("enginespeed"), 64, m_Billboard)
+ , m_GasOil(m_Textures.GetTexRect("tempoil"), 32, m_Billboard)
+ , m_Temp(m_Textures.GetTexRect("tempoil"), 32, m_Billboard)
  , m_Step(0)
 {
 	m_Billboard->SetLogicSize(1920, 720);
@@ -233,6 +235,12 @@ DashBoard::DashBoard(Billboard* bb)
 	
 	m_EngineSpeed.SetArc(cx, cy, 250.0f, 234.0f, -288.0f);
 	m_EngineSpeed.SetProgress(0.5f);
+	
+	m_GasOil.SetArc(cx, cy, 203.0f, 225.0f, -90.0f);
+	m_GasOil.SetProgress(0.5f);
+	
+	m_Temp.SetArc(cx, cy, 205.0f, -45.0f, 90.0f);
+	m_Temp.SetProgress(0.5f);
 }
 
 DashBoard::~DashBoard()
@@ -292,6 +300,8 @@ void DashBoard::Step2()
 	m_Mph.Draw();
 	m_MphNums[0].Draw();
 	m_MphNums[10].Draw();
-	m_EngineSpeed.Draw();		
+	m_EngineSpeed.Draw();
+	m_GasOil.Draw();
+	m_Temp.Draw();		
 }
 

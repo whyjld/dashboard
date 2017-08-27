@@ -91,6 +91,9 @@ private:
 	
 	ArcItem m_EngineSpeed;
 	
+	ArcItem m_GasOil;
+	ArcItem m_Temp;
+	
 	clock_t m_StepStart;
 	clock_t m_Time;
 	
