@@ -300,7 +300,7 @@ void Billboard::SetAlpha(float alpha)
 void Billboard::Draw(const ItemInfo& items, GLsizei count)
 {
 	glBindVertexArray(items.VAO);
-	glDrawElements(GL_TRIANGLE_STRIP, 4 * count, GL_UNSIGNED_SHORT, nullptr);
+	glDrawElements(GL_TRIANGLE_STRIP, count, GL_UNSIGNED_SHORT, nullptr);
 }
 
 void Billboard::End() const

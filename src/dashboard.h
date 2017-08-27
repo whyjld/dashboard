@@ -53,18 +53,19 @@ public:
 	
 	ArcItem& operator=(const ArcItem& v);
 	
-	void SetPosition(float x, float y);
+	void SetArc(float x, float y, float radius, float begin, float radian);
+	void SetProgress(float p);
 	
 	void Draw();
 private:
-	void SetAttribute(float x, float y);
+	void SetAttribute();
 	
-	Billboard* m_BB;
-
-	TexInfo m_TexInfo;
-	ItemInfo m_ItemInfo;
-	
-	int* m_Usage;
+	float m_X;
+	float m_Y;
+	float m_R;
+	float m_B;
+	float m_A;
+	float m_P;
 };
 
 class DashBoard
@@ -87,6 +88,8 @@ private:
 	RectItem m_Center;
 	RectItem m_Mph;
 	std::vector<RectItem> m_MphNums;
+	
+	ArcItem m_EngineSpeed;
 	
 	clock_t m_StepStart;
 	clock_t m_Time;

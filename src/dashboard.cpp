@@ -1,4 +1,5 @@
 #include "dashboard.h"
+#include <math.h>
 
 RenderItem::RenderItem(const TexInfo& tex, GLsizei slice, Billboard* bb)
  : m_BB(bb)
@@ -68,7 +69,7 @@ void RectItem::SetPosition(float x, float y)
 
 void RectItem::Draw()
 {
-	m_BB->Draw(m_ItemInfo, 1);
+	m_BB->Draw(m_ItemInfo, 4);
 }
 
 void RectItem::SetAttribute(float x, float y)
@@ -97,7 +98,108 @@ void RectItem::SetAttribute(float x, float y)
 	m_BB->SetItemsAttribute(m_ItemInfo, buffer, 4);	
 }
 
+ArcItem::ArcItem(const TexInfo& tex, GLsizei slice, Billboard* bb)
+ : RenderItem(tex, slice * 2, bb)
+ , m_X(0.0f)
+ , m_Y(0.0f)
+ , m_R(0.0f)
+ , m_B(0.0f)
+ , m_A(0.0f)
+ , m_P(0.0f)
+{
+}
 
+ArcItem::ArcItem(const ArcItem& v)
+ : RenderItem(v)
+{
+}
+
+ArcItem::~ArcItem()
+{
+}
+	
+ArcItem& ArcItem::operator=(const ArcItem& v)
+{
+	if(this != &v)
+	{
+		Release();
+		m_BB = v.m_BB;
+		m_Usage = v.m_Usage;
+		m_TexInfo = v.m_TexInfo;
+		m_ItemInfo = v.m_ItemInfo;
+		++(*m_Usage);
+	}
+	return *this;
+}
+	
+void ArcItem::SetArc(float x, float y, float radius, float begin, float radian)
+{
+	m_X = x;
+	m_Y = y; 
+	m_R = radius;
+	m_B = begin / 180.0f * M_PI;
+	m_A = radian / 180.0f * M_PI;
+	
+	SetAttribute();
+}
+
+void ArcItem::SetProgress(float p)
+{
+	m_P = p;
+	
+	SetAttribute();
+}
+	
+void ArcItem::Draw()
+{
+	m_BB->Draw(m_ItemInfo, m_ItemInfo.Count);
+}
+
+void ArcItem::SetAttribute()
+{
+	std::vector<float> buffer(4 * m_ItemInfo.Count);
+	
+	float* is;
+	float* os;
+	if(m_A > 0)
+	{
+		is = &buffer[0];
+		os = &buffer[4];
+	}
+	else
+	{
+		is = &buffer[4];
+		os = &buffer[0];
+	}
+	
+	GLsizei c = m_ItemInfo.Count / 2 - 1;
+	float s = m_A * m_P / c;
+	float t = (m_TexInfo.Top - m_TexInfo.Bottom) * m_P / c;
+	for(GLsizei i = 0;i < c + 1;++i)
+	{
+		float a = m_B + s * i;
+		float v = m_TexInfo.Bottom + t * i;
+		float c = cos(a);
+		float s = sin(a);
+		
+		float r = m_R - m_TexInfo.Width / 2;
+		is[0] = c * r + m_X;
+		is[1] = s * r + m_Y;
+		is[2] = m_TexInfo.Right;
+		is[3] = v;
+		
+		r = m_R + m_TexInfo.Width / 2;
+		os[0] = c * r + m_X;
+		os[1] = s * r + m_Y;
+		os[2] = m_TexInfo.Left;
+		os[3] = v;
+	
+		is += 4 * 2;
+		os += 4 * 2;
+	}
+	
+	m_BB->SetItemsAttribute(m_ItemInfo, &buffer[0], m_ItemInfo.Count);	
+}
 
 DashBoard::DashBoard(Billboard* bb)
  : m_Billboard(bb)
@@ -105,6 +207,7 @@ DashBoard::DashBoard(Billboard* bb)
  , m_Background(m_Textures.GetTexRect("background"), m_Billboard)
  , m_Center(m_Textures.GetTexRect("center"), m_Billboard)
  , m_Mph(m_Textures.GetTexRect("mph"), m_Billboard)
+ , m_EngineSpeed(m_Textures.GetTexRect("enginespeed"), 64, m_Billboard)
  , m_Step(0)
 {
 	m_Billboard->SetLogicSize(1920, 720);
@@ -127,6 +230,9 @@ DashBoard::DashBoard(Billboard* bb)
 		}
 		x += 50.0f;
 	}
+	
+	m_EngineSpeed.SetArc(cx, cy, 250.0f, 234.0f, -288.0f);
+	m_EngineSpeed.SetProgress(0.5f);
 }
 
 DashBoard::~DashBoard()
@@ -185,6 +291,7 @@ void DashBoard::Step2()
 	m_Center.Draw();
 	m_Mph.Draw();
 	m_MphNums[0].Draw();
-	m_MphNums[10].Draw();		
+	m_MphNums[10].Draw();
+	m_EngineSpeed.Draw();		
 }
 
