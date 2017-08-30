@@ -4,7 +4,7 @@
 #include "billboard.h"
 #include "texrect.h"
 #include <vector>
-#include <ctime>
+#include <sys/time.h>
 
 class RenderItem
 {
@@ -12,10 +12,29 @@ public:
 	virtual ~RenderItem();
 
 	RenderItem& operator=(const RenderItem& v) = delete;
+	
+	const TexInfo& GetTexInfo() const
+	{
+		return m_TexInfo;
+	}
+	
+	virtual float GetX() const
+	{
+		return m_X;
+	}
+	virtual float GetY() const
+	{
+		return m_Y;
+	}
+	virtual float GetScale() const
+	{
+		return m_Scale;
+	}
 
 	virtual void SetPosition(float x, float y);
+	virtual void SetScale(float scale);
 
-	virtual void Draw() = 0;
+	virtual void Draw();
 protected:
 	RenderItem(const TexInfo& tex, GLsizei slice, Billboard* bb);
 	RenderItem(const RenderItem& v);
@@ -30,6 +49,7 @@ protected:
 	
 	float m_X;
 	float m_Y;
+	float m_Scale;
 	
 	int* m_Usage;
 };
@@ -48,8 +68,6 @@ public:
 	~RectItem();
 	
 	RectItem& operator=(const RectItem& v);
-	
-	void Draw();
 private:
 	void SetAttribute(uint32_t mode);
 };
@@ -65,8 +83,6 @@ public:
 
 	void SetArc(float radius, float begin, float radian);
 	void SetProgress(float p);
-	
-	void Draw();
 private:
 	void SetAttribute();
 	
@@ -85,9 +101,12 @@ public:
 	
 	void Draw();
 private:
+	long MicroSecond();
 	void NextStep();
 	void Step1();
 	void Step2();
+	void Step3();
+	void Step4();
 	
 	Billboard* m_Billboard;
 	TexRect m_Textures;
@@ -102,8 +121,21 @@ private:
 	ArcItem m_GasOil;
 	ArcItem m_Temp;
 	
-	clock_t m_StepStart;
-	clock_t m_Time;
+	std::vector<RectItem> m_Ends;
+	
+	RectItem m_LeftOutter;
+	RectItem m_RightOutter;
+	
+	RectItem m_LeftSide;
+	RectItem m_RightSide;
+	RectItem m_ECOSide;
+	
+	timeval m_StartTime;
+	timeval m_CurrentTime;
+	
+	long m_StepStart;
+	long m_Time;
+	long m_Second;
 	
 	size_t m_Step;
 };

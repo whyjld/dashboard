@@ -4,6 +4,6 @@
 #include "gli.h"
 #include <fstream>
 
-GLuint LoadTGA(const char* name, GLsizei& width, GLsizei& height, GLenum& format);
+bool LoadTGA(const char* name, GLsizei& width, GLsizei& height, GLenum& format, uint8_t*& image);
 
 #endif//_TGA_h_

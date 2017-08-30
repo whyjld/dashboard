@@ -23,7 +23,7 @@ public:
 
 	void Begin() const;
 	void SetAlpha(float alpha);
-	void SetPosition(float x, float y);
+	void SetTranslation(float x, float y, float s);
 	void Draw(const ItemInfo& items, GLsizei count);
 	void End() const;
 private:
@@ -45,7 +45,7 @@ private:
 
 	GLuint m_PTLocation;
 	GLuint m_AlphaLocation;
-	GLuint m_PosLocation;
+	GLuint m_TransLocation;
 	GLuint m_VPLocation;
 
 	GLuint m_Program;

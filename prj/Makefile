@@ -43,18 +43,20 @@ OBJECTS += \
 	texrect.o \
 	dashboard.o \
 	billboard.o
-	
+
+DEPS += -lstdc++ -lm -ldl -lwebp -lpthread -Wl,--library-path=$(TARGET_PATH_LIB),-rpath-link=$(TARGET_PATH_LIB)
+
 ifeq ($(ARCH),arm)
 	OBJECTS += eglc.o
-	DEPS = -lstdc++ -lm -lGLESv2 -lEGL  -ldl -Wl,--library-path=$(TARGET_PATH_LIB),-rpath-link=$(TARGET_PATH_LIB)
+	DEPS += -lGLESv2 -lEGL -L../vendor/lib/arm
 else
 	ifeq ($(API),gl)
 		CFLAGS += -DUSE_OGL
 		OBJECTS += glxc.o
-		DEPS = -lstdc++ -lm -lGLEW -lGL -lX11 -ldl -Wl,--library-path=$(TARGET_PATH_LIB),-rpath-link=$(TARGET_PATH_LIB)
+		DEPS += -lGLEW -lGL -lX11 -L../vendor/lib/x86_64
 	else
 		OBJECTS += eglc.o
-		DEPS = -lstdc++ -lm -lGLESv2 -lEGL -lX11 -ldl -Wl,--library-path=$(TARGET_PATH_LIB),-rpath-link=$(TARGET_PATH_LIB)
+		DEPS += -lGLESv2 -lEGL -lX11 -L../vendor/lib/x86_64
 	endif
 endif
 

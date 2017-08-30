@@ -1,4 +1,5 @@
 #include "dashboard.h"
+#include <iostream>
 #include <math.h>
 
 RenderItem::RenderItem(const TexInfo& tex, GLsizei slice, Billboard* bb)
@@ -7,6 +8,7 @@ RenderItem::RenderItem(const TexInfo& tex, GLsizei slice, Billboard* bb)
  , m_ItemInfo(bb->CreateItems(slice))
  , m_X(0.0f)
  , m_Y(0.0f)
+ , m_Scale(1.0f)
  , m_Usage(new int(1))
 {
 }
@@ -17,6 +19,7 @@ RenderItem::RenderItem(const RenderItem& v)
  , m_ItemInfo(v.m_ItemInfo)
  , m_X(v.m_X)
  , m_Y(v.m_Y)
+ , m_Scale(v.m_Scale)
  , m_Usage(v.m_Usage)
 {
 	++(*m_Usage);
@@ -31,6 +34,17 @@ void RenderItem::SetPosition(float x, float y)
 {
 	m_X = x;
 	m_Y = y;
+}
+
+void RenderItem::SetScale(float scale)
+{
+	m_Scale = scale;
+}
+	
+void RenderItem::Draw()
+{
+	m_BB->SetTranslation(m_X, m_Y, m_Scale);
+	m_BB->Draw(m_ItemInfo, m_ItemInfo.Count);
 }
 
 void RenderItem::Release()
@@ -51,6 +65,7 @@ void RenderItem::Dump(const RenderItem& v)
 	m_ItemInfo = v.m_ItemInfo;
 	m_X = v.m_X;
 	m_Y = v.m_Y;
+	m_Scale = v.m_Scale;
 	++(*m_Usage);
 }
 
@@ -77,12 +92,6 @@ RectItem& RectItem::operator=(const RectItem& v)
 		Dump(v);
 	}
 	return *this;
-}
-
-void RectItem::Draw()
-{
-	m_BB->SetPosition(m_X, m_Y);
-	m_BB->Draw(m_ItemInfo, 4);
 }
 
 void RectItem::SetAttribute(uint32_t mode)
@@ -186,12 +195,6 @@ void ArcItem::SetProgress(float p)
 	
 	SetAttribute();
 }
-	
-void ArcItem::Draw()
-{
-	m_BB->SetPosition(m_X, m_Y);
-	m_BB->Draw(m_ItemInfo, m_ItemInfo.Count);
-}
 
 void ArcItem::SetAttribute()
 {
@@ -248,6 +251,11 @@ DashBoard::DashBoard(Billboard* bb)
  , m_EngineSpeed(m_Textures.GetTexRect("enginespeed"), 64, m_Billboard)
  , m_GasOil(m_Textures.GetTexRect("tempoil"), 32, m_Billboard)
  , m_Temp(m_Textures.GetTexRect("tempoil"), 32, m_Billboard)
+ , m_LeftOutter(m_Textures.GetTexRect("outter"), 0, m_Billboard)
+ , m_RightOutter(m_Textures.GetTexRect("outter"), fmHorizonal, m_Billboard)
+ , m_LeftSide(m_Textures.GetTexRect("side"), 0, m_Billboard)
+ , m_RightSide(m_Textures.GetTexRect("side"), fmHorizonal, m_Billboard)
+ , m_ECOSide(m_Textures.GetTexRect("eco"), 0, m_Billboard)
  , m_Step(0)
 {
 	m_Billboard->SetLogicSize(1920, 720);
@@ -271,6 +279,15 @@ DashBoard::DashBoard(Billboard* bb)
 		x += 50.0f;
 	}
 	
+	for(int d = 0;d < 4;++d)
+	{
+		m_Ends.push_back(RectItem(m_Textures.GetTexRect("end"), d, m_Billboard));
+	}
+	m_Ends[0].SetPosition(cx - 175.0f, cy + 245.0f);
+	m_Ends[1].SetPosition(cx + 175.0f, cy + 245.0f);
+	m_Ends[2].SetPosition(cx - 175.0f, cy - 245.0f);
+	m_Ends[3].SetPosition(cx + 175.0f, cy - 245.0f);
+	
 	m_EngineSpeed.SetPosition(cx, cy);
 	m_EngineSpeed.SetArc(250.0f, 234.0f, -288.0f);
 	m_EngineSpeed.SetProgress(0.5f);
@@ -282,6 +299,16 @@ DashBoard::DashBoard(Billboard* bb)
 	m_Temp.SetPosition(cx, cy);
 	m_Temp.SetArc(205.0f, -45.0f, 90.0f);
 	m_Temp.SetProgress(0.5f);
+	
+	m_LeftOutter.SetScale(0.60f);
+	m_LeftOutter.SetPosition(700.0f, cy);
+	m_RightOutter.SetScale(0.60f);
+	m_RightOutter.SetPosition(1220.0f, cy);
+	
+	m_LeftSide.SetPosition(-m_LeftSide.GetTexInfo().Width / 2, cy);
+	m_RightSide.SetPosition(1920.0f + m_LeftSide.GetTexInfo().Width / 2, cy);
+
+	gettimeofday(&m_StartTime, NULL);
 }
 
 DashBoard::~DashBoard()
@@ -290,7 +317,12 @@ DashBoard::~DashBoard()
 
 void DashBoard::Draw()
 {
-	m_Time = clock();
+	m_Time = MicroSecond();
+	if(m_Time > m_Second + 1000)
+	{
+		m_Second = m_Time;
+		std::cout << "Frame time :" << m_Time << std::endl;
+	}
 	m_Billboard->Begin();
 		glDisable(GL_BLEND);
 		m_Background.Draw();
@@ -305,10 +337,26 @@ void DashBoard::Draw()
 			case 2:
 				Step2();
 				break;
+			case 3:
+				Step3();
+				break;
+			case 4:
+				Step4();
+				break;
 			default:
 				break;
 		};
 	m_Billboard->End();
+}
+
+long DashBoard::MicroSecond()
+{
+	gettimeofday(&m_CurrentTime, NULL);
+	
+	long sec  = m_CurrentTime.tv_sec  - m_StartTime.tv_sec;
+    long usec = m_CurrentTime.tv_usec - m_StartTime.tv_usec;
+
+	return sec * 1000L + long(usec / 1000.0 + 0.5);
 }
 
 void DashBoard::NextStep()
@@ -319,11 +367,7 @@ void DashBoard::NextStep()
 
 void DashBoard::Step1()
 {
-	const auto sec = 1 * CLOCKS_PER_SEC;
-	if(m_Time - m_StepStart > sec)
-	{
-		++m_Step;
-	}
+	const long sec = 1000;
 	float a = std::min(1.0f, float(m_Time - m_StepStart) / sec);
 	glEnable(GL_BLEND);
 	m_Billboard->SetAlpha(a);
@@ -331,6 +375,19 @@ void DashBoard::Step1()
 	m_Mph.Draw();
 	m_MphNums[0].Draw();
 	m_MphNums[10].Draw();		
+
+	m_Ends[0].Draw();
+	m_Ends[1].Draw();
+	m_Ends[2].Draw();
+	m_Ends[3].Draw();
+
+	m_LeftOutter.Draw();
+	m_RightOutter.Draw();
+
+	if(m_Time - m_StepStart > sec)
+	{
+		NextStep();
+	}
 }
 
 void DashBoard::Step2()
@@ -341,17 +398,123 @@ void DashBoard::Step2()
 	m_Mph.Draw();
 	m_MphNums[0].Draw();
 	m_MphNums[10].Draw();
-	
-	const auto sec = 5 * CLOCKS_PER_SEC;
-	float op = std::min(1.0f, float(m_Time - m_StepStart) / sec);
-	float tp = std::min(0.8f, float(m_Time - m_StepStart) / sec);
+
+	m_Ends[0].Draw();
+	m_Ends[1].Draw();
+	m_Ends[2].Draw();
+	m_Ends[3].Draw();
 
 	m_EngineSpeed.Draw();
+
+	{
+		const long sec = 2000;
+		float p = std::min(1.0f, float(m_Time - m_StepStart) / sec);
+
+		m_LeftOutter.SetScale(0.60f + p * 0.40f);
+		m_LeftOutter.SetPosition(700.0f - p * 480.0f, 360.0f);
+
+		m_RightOutter.SetScale(0.60f + p * 0.40f);
+		m_RightOutter.SetPosition(1220.0f + p * 480.0f, 360.0f);
+
+		m_LeftOutter.Draw();
+		m_RightOutter.Draw();
+	}
 	
-	m_GasOil.SetProgress(op);
+	{
+		const long sec = 2000;
+		float op = std::min(1.0f, float(m_Time - m_StepStart) / sec);
+		float tp = std::min(0.8f, float(m_Time - m_StepStart) / sec);
+	
+		m_GasOil.SetProgress(op);
+		m_Temp.SetProgress(tp);
+	
+		m_GasOil.Draw();
+		m_Temp.Draw();
+	}
+	
+	if(m_Time - m_StepStart > 2000)
+	{
+		NextStep();
+	}
+}
+
+void DashBoard::Step3()
+{
+	glEnable(GL_BLEND);
+	m_Billboard->SetAlpha(1.0f);
+	m_Center.Draw();
+	m_Mph.Draw();
+	m_MphNums[0].Draw();
+	m_MphNums[10].Draw();
+
+	m_LeftOutter.Draw();
+	m_RightOutter.Draw();
+	
+	m_EngineSpeed.Draw();
+
+	m_Ends[0].Draw();
+	m_Ends[1].Draw();
+	m_Ends[2].Draw();
+	m_Ends[3].Draw();
+	
+	m_GasOil.SetProgress(1.0);
 	m_GasOil.Draw();
 	
-	m_Temp.SetProgress(tp);
-	m_Temp.Draw();		
+	m_Temp.SetProgress(0.8);
+	m_Temp.Draw();
+	
+	const long ss = 2000;
+	float sp = std::min(1.0f, float(m_Time - m_StepStart) / ss);
+
+	float y = 360.0f;
+	float ls = -m_LeftSide.GetTexInfo().Width / 2;
+	float rs = 1920.0f + m_LeftSide.GetTexInfo().Width / 2;
+	float dis = m_LeftSide.GetTexInfo().Width + 180.0f;
+	m_LeftSide.SetPosition(ls + dis * sp, y);
+	m_RightSide.SetPosition(rs - dis * sp, y);
+	
+	m_LeftSide.Draw();
+	m_RightSide.Draw();
+	
+	if(m_Time - m_StepStart > ss)
+	{
+		NextStep();
+		m_ECOSide.SetPosition(m_RightSide.GetX(), m_RightSide.GetY());
+	}
+}
+
+void DashBoard::Step4()
+{
+	glEnable(GL_BLEND);
+	m_Billboard->SetAlpha(1.0f);
+	m_Center.Draw();
+	m_Mph.Draw();
+	m_MphNums[0].Draw();
+	m_MphNums[10].Draw();
+
+	m_LeftOutter.Draw();
+	m_RightOutter.Draw();
+	
+	m_EngineSpeed.Draw();
+
+	m_Ends[0].Draw();
+	m_Ends[1].Draw();
+	m_Ends[2].Draw();
+	m_Ends[3].Draw();
+	
+	m_GasOil.SetProgress(1.0);
+	m_GasOil.Draw();
+	
+	m_Temp.SetProgress(0.8);
+	m_Temp.Draw();
+		
+	m_LeftSide.Draw();
+
+	const long ss = 1000;
+	float ep = std::min(1.0f, float(m_Time - m_StepStart) / ss);
+	m_Billboard->SetAlpha(1.0f - ep);
+	m_RightSide.Draw();
+	m_Billboard->SetAlpha(ep);
+	m_ECOSide.Draw();
 }
 

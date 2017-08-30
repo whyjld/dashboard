@@ -1,6 +1,8 @@
 #include <rapidjson/document.h>
 #include <stdexcept>
 #include <iostream>
+#include <vector>
+#include <webp/decode.h>
 #include "texrect.h"
 #include "tga.h"
 
@@ -58,13 +60,7 @@ TexRect::TexRect(const char* path, const char* file)
 	GET_VALUE(texFile, doc, file, IsString, GetString);
 	
 	GLsizei width, height;
-	GLenum format;
-	m_Texture = LoadTGA((pathName + texFile).c_str(), width, height, format);
-	if(0 == m_Texture)
-	{
-		throw std::runtime_error("Can't load texture.");
-	}
-	
+	LoadTexture(pathName + texFile, width, height);
 	
 	GET_NODE(doc, frames);
 	for (rapidjson::Value::ConstMemberIterator i = frames.MemberBegin();i != frames.MemberEnd(); ++i)
@@ -106,4 +102,94 @@ TexInfo TexRect::GetTexRect(const char* name)
 		ret = i->second;
 	}
 	return ret;
+}
+
+void TexRect::LoadTexture(const std::string& file, GLsizei& width, GLsizei& height)
+{
+	GLenum format;
+
+	uint8_t* image = nullptr;
+	
+	enum TexType
+	{
+		ttNone,
+		ttTGA,
+		ttWebP,
+	};
+	TexType texType = ttNone;
+	if(file.find(".tga") != std::string::npos)
+	{
+		if(!LoadTGA(file.c_str(), width, height, format, image))
+		{
+			throw std::runtime_error("Can't load tga texture.");
+		}
+		texType = ttTGA;
+	}
+	else if(file.find(".webp") != std::string::npos)
+	{
+		std::ifstream inf(file.c_str(), std::ios::binary | std::ios::in);
+		if(!inf)
+		{
+			throw std::runtime_error("Can't open webp texture.");
+		}
+		inf.seekg(0, std::ios::end);
+		std::vector<uint8_t> buf(inf.tellg());
+		inf.seekg(0, std::ios::beg);
+		inf.read((char*)&buf[0], buf.size());
+		if((size_t)inf.gcount() != buf.size())
+		{
+			throw std::runtime_error("Can't load webp texture");
+		}
+		int w, h;
+		image = WebPDecodeRGBA(&buf[0], buf.size(), &w, &h);
+		width = w;
+		height = h;
+		format = GL_RGBA;
+		
+		texType = ttWebP;
+	}
+	
+	if(nullptr == image || ttNone == texType)
+	{
+		throw std::runtime_error("Invalid texture file.");
+	}
+	glGenTextures(1, &m_Texture);
+	if(0 == m_Texture)
+	{
+		throw std::runtime_error("Can't create gl texture.");
+	}
+
+	glBindTexture(GL_TEXTURE_2D, m_Texture);
+	glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, image);
+	bool mipmap = (0 == (width & (width - 1)) && 0 == (height & (height - 1)));
+	GLenum minf;
+	GLenum wrap;
+	if(mipmap)
+	{
+		glGenerateMipmap(GL_TEXTURE_2D);
+		minf = GL_LINEAR_MIPMAP_LINEAR;
+		wrap = GL_REPEAT;
+	}
+	else
+	{
+		minf = GL_LINEAR;
+		wrap = GL_CLAMP_TO_EDGE;
+	}
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minf);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap);
+
+	switch(texType)
+	{
+		case ttTGA:
+			delete[] image;
+			break;
+		case ttWebP:
+			WebPFree(image);
+			break;
+		case ttNone:
+		default:
+			break;
+	};
 }

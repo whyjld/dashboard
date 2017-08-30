@@ -211,7 +211,7 @@ static bool LoadCompressedTGA(const uint8_t* inbuf, size_t len, GLsizei& width, 
 	return true;
 }
 
-GLuint LoadTGA(const char* name, GLsizei& width, GLsizei& height, GLenum& format)
+bool LoadTGA(const char* name, GLsizei& width, GLsizei& height, GLenum& format, uint8_t*& image)
 {
 	std::vector<uint8_t> buffer;
 	{
@@ -235,8 +235,6 @@ GLuint LoadTGA(const char* name, GLsizei& width, GLsizei& height, GLenum& format
 	uint8_t* buf = &buffer[sizeof(header)];
 	size_t   len = buffer.size() - sizeof(header);
 	
-	uint8_t* image;
-
 	bool result = false;
 	if(0 == memcmp(uTGAcompare, header, sizeof(header)))
 	{
@@ -246,34 +244,5 @@ GLuint LoadTGA(const char* name, GLsizei& width, GLsizei& height, GLenum& format
 	{
 		result = LoadCompressedTGA(buf, len, width, height, format, image);
 	}
-	if(!result)
-	{
-		return 0;
-	}
-	GLuint tex = 0;
-	glGenTextures(1, &tex);
-	if(0 != tex)
-	{
-		glBindTexture(GL_TEXTURE_2D, tex);
-		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, image);
-		bool mipmap = (0 == (width & (width - 1)) && 0 == (height & (height - 1)));
-		GLenum minf;
-		GLenum wrap;
-		if(mipmap)
-		{
-			glGenerateMipmap(GL_TEXTURE_2D);
-			minf = GL_LINEAR_MIPMAP_LINEAR;
-			wrap = GL_REPEAT;
-		}
-		else
-		{
-			minf = GL_LINEAR;
-			wrap = GL_CLAMP_TO_EDGE;
-		}
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minf);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap);
-	}
-	return tex;
+	return result;
 }

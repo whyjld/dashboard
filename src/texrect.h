@@ -20,6 +20,8 @@ public:
 	
 	TexInfo GetTexRect(const char* name);
 private:
+	void LoadTexture(const std::string& file, GLsizei& width, GLsizei& height);
+
 	GLuint m_Texture;
 	
 	std::map<std::string, TexInfo> m_Rects;

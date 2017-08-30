@@ -109,11 +109,11 @@ void Billboard::InitShaders()
 		\n
 		out vec2 tc; \n
 		\n
-		uniform vec2 pos;\n
+		uniform vec4 trans;\n
 		uniform vec4 vp;\n
 		void main()\n
 		{ \n
-			gl_Position = vec4((pt.xy + pos.xy) * vp.zw + vp.xy, 0.0, 1.0); \n
+			gl_Position = vec4((pt.xy * trans.z + trans.xy) * vp.zw + vp.xy, 0.0, 1.0); \n
 			tc = pt.zw; \n
 		}\n
 	);
@@ -151,8 +151,8 @@ void Billboard::InitShaders()
 	m_AlphaLocation = glGetUniformLocation(m_Program, "alpha");
 	glUniform1f(m_AlphaLocation, 1.0f);
 	
-	m_PosLocation = glGetUniformLocation(m_Program, "pos");
-	glUniform2f(m_PosLocation, 0.0f, 0.0f);
+	m_TransLocation = glGetUniformLocation(m_Program, "trans");
+	glUniform4f(m_TransLocation, 0.0f, 0.0f, 1.0f, 0.0f);
 
 	m_VPLocation = glGetUniformLocation(m_Program, "vp");
 
@@ -301,9 +301,9 @@ void Billboard::SetAlpha(float alpha)
 	glUniform1f(m_AlphaLocation, alpha);
 }
 
-void Billboard::SetPosition(float x, float y)
+void Billboard::SetTranslation(float x, float y, float s)
 {
-	glUniform2f(m_PosLocation, x, y);
+	glUniform4f(m_TransLocation, x, y, s, 0.0f);
 }
 
 void Billboard::Draw(const ItemInfo& items, GLsizei count)
