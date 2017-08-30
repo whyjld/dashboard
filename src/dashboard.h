@@ -13,17 +13,23 @@ public:
 
 	RenderItem& operator=(const RenderItem& v) = delete;
 
+	virtual void SetPosition(float x, float y);
+
 	virtual void Draw() = 0;
 protected:
 	RenderItem(const TexInfo& tex, GLsizei slice, Billboard* bb);
 	RenderItem(const RenderItem& v);
 
 	void Release();
+	void Dump(const RenderItem& v);
 		
 	Billboard* m_BB;
 
 	TexInfo m_TexInfo;
 	ItemInfo m_ItemInfo;
+	
+	float m_X;
+	float m_Y;
 	
 	int* m_Usage;
 };
@@ -37,11 +43,9 @@ public:
 	
 	RectItem& operator=(const RectItem& v);
 	
-	void SetPosition(float x, float y);
-	
 	void Draw();
 private:
-	void SetAttribute(float x, float y);
+	void SetAttribute();
 };
 
 class ArcItem : public RenderItem
@@ -52,16 +56,14 @@ public:
 	~ArcItem();
 	
 	ArcItem& operator=(const ArcItem& v);
-	
-	void SetArc(float x, float y, float radius, float begin, float radian);
+
+	void SetArc(float radius, float begin, float radian);
 	void SetProgress(float p);
 	
 	void Draw();
 private:
 	void SetAttribute();
 	
-	float m_X;
-	float m_Y;
 	float m_R;
 	float m_B;
 	float m_A;

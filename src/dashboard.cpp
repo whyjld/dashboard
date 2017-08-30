@@ -5,6 +5,8 @@ RenderItem::RenderItem(const TexInfo& tex, GLsizei slice, Billboard* bb)
  : m_BB(bb)
  , m_TexInfo(tex)
  , m_ItemInfo(bb->CreateItems(slice))
+ , m_X(0.0f)
+ , m_Y(0.0f)
  , m_Usage(new int(1))
 {
 }
@@ -13,6 +15,8 @@ RenderItem::RenderItem(const RenderItem& v)
  : m_BB(v.m_BB)
  , m_TexInfo(v.m_TexInfo)
  , m_ItemInfo(v.m_ItemInfo)
+ , m_X(v.m_X)
+ , m_Y(v.m_Y)
  , m_Usage(v.m_Usage)
 {
 	++(*m_Usage);
@@ -21,6 +25,12 @@ RenderItem::RenderItem(const RenderItem& v)
 RenderItem::~RenderItem()
 {
 	Release();
+}
+
+void RenderItem::SetPosition(float x, float y)
+{
+	m_X = x;
+	m_Y = y;
 }
 
 void RenderItem::Release()
@@ -33,10 +43,21 @@ void RenderItem::Release()
 	}
 }
 
+void RenderItem::Dump(const RenderItem& v)
+{
+	m_BB = v.m_BB;
+	m_Usage = v.m_Usage;
+	m_TexInfo = v.m_TexInfo;
+	m_ItemInfo = v.m_ItemInfo;
+	m_X = v.m_X;
+	m_Y = v.m_Y;
+	++(*m_Usage);
+}
+
 RectItem::RectItem(const TexInfo& tex, Billboard* bb)
  : RenderItem(tex, 4, bb)
 {
-	SetAttribute(0.0f, 0.0f);
+	SetAttribute();
 }
 
 RectItem::RectItem(const RectItem& v)
@@ -53,55 +74,45 @@ RectItem& RectItem::operator=(const RectItem& v)
 	if(this != &v)
 	{
 		Release();
-		m_BB = v.m_BB;
-		m_Usage = v.m_Usage;
-		m_TexInfo = v.m_TexInfo;
-		m_ItemInfo = v.m_ItemInfo;
-		++(*m_Usage);
+		Dump(v);
 	}
 	return *this;
-}
-	
-void RectItem::SetPosition(float x, float y)
-{
-	SetAttribute(x, y);
 }
 
 void RectItem::Draw()
 {
+	m_BB->SetPosition(m_X, m_Y);
 	m_BB->Draw(m_ItemInfo, 4);
 }
 
-void RectItem::SetAttribute(float x, float y)
+void RectItem::SetAttribute()
 {
 	float buffer[4 * 4];
-	buffer[0 * 4 + 0] = x - m_TexInfo.Width / 2;
-	buffer[0 * 4 + 1] = y + m_TexInfo.Height / 2;
-	buffer[0 * 4 + 2] = m_TexInfo.Left;
-	buffer[0 * 4 + 3] = m_TexInfo.Bottom;
+	buffer[0 * 4 + 0] = -m_TexInfo.Width / 2;
+	buffer[0 * 4 + 1] =  m_TexInfo.Height / 2;
+	buffer[0 * 4 + 2] =  m_TexInfo.Left;
+	buffer[0 * 4 + 3] =  m_TexInfo.Bottom;
 
-	buffer[1 * 4 + 0] = x - m_TexInfo.Width / 2;
-	buffer[1 * 4 + 1] = y - m_TexInfo.Height / 2;
-	buffer[1 * 4 + 2] = m_TexInfo.Left;
-	buffer[1 * 4 + 3] = m_TexInfo.Top;
+	buffer[1 * 4 + 0] = -m_TexInfo.Width / 2;
+	buffer[1 * 4 + 1] = -m_TexInfo.Height / 2;
+	buffer[1 * 4 + 2] =  m_TexInfo.Left;
+	buffer[1 * 4 + 3] =  m_TexInfo.Top;
 
-	buffer[2 * 4 + 0] = x + m_TexInfo.Width / 2;
-	buffer[2 * 4 + 1] = y + m_TexInfo.Height / 2;
-	buffer[2 * 4 + 2] = m_TexInfo.Right;
-	buffer[2 * 4 + 3] = m_TexInfo.Bottom;
+	buffer[2 * 4 + 0] =  m_TexInfo.Width / 2;
+	buffer[2 * 4 + 1] =  m_TexInfo.Height / 2;
+	buffer[2 * 4 + 2] =  m_TexInfo.Right;
+	buffer[2 * 4 + 3] =  m_TexInfo.Bottom;
 
-	buffer[3 * 4 + 0] = x + m_TexInfo.Width / 2;
-	buffer[3 * 4 + 1] = y - m_TexInfo.Height / 2;
-	buffer[3 * 4 + 2] = m_TexInfo.Right;
-	buffer[3 * 4 + 3] = m_TexInfo.Top;
+	buffer[3 * 4 + 0] =  m_TexInfo.Width / 2;
+	buffer[3 * 4 + 1] = -m_TexInfo.Height / 2;
+	buffer[3 * 4 + 2] =  m_TexInfo.Right;
+	buffer[3 * 4 + 3] =  m_TexInfo.Top;
 	
 	m_BB->SetItemsAttribute(m_ItemInfo, buffer, 4);	
 }
 
 ArcItem::ArcItem(const TexInfo& tex, GLsizei slice, Billboard* bb)
  : RenderItem(tex, slice * 2, bb)
- , m_X(0.0f)
- , m_Y(0.0f)
  , m_R(0.0f)
  , m_B(0.0f)
  , m_A(0.0f)
@@ -111,6 +122,10 @@ ArcItem::ArcItem(const TexInfo& tex, GLsizei slice, Billboard* bb)
 
 ArcItem::ArcItem(const ArcItem& v)
  : RenderItem(v)
+ , m_R(v.m_R)
+ , m_B(v.m_B)
+ , m_A(v.m_A)
+ , m_P(v.m_P)
 {
 }
 
@@ -123,19 +138,17 @@ ArcItem& ArcItem::operator=(const ArcItem& v)
 	if(this != &v)
 	{
 		Release();
-		m_BB = v.m_BB;
-		m_Usage = v.m_Usage;
-		m_TexInfo = v.m_TexInfo;
-		m_ItemInfo = v.m_ItemInfo;
-		++(*m_Usage);
+		m_R = v.m_R;
+		m_B = v.m_B;
+		m_A = v.m_A;
+		m_P = v.m_P;
+		Dump(v);
 	}
 	return *this;
 }
 	
-void ArcItem::SetArc(float x, float y, float radius, float begin, float radian)
+void ArcItem::SetArc(float radius, float begin, float radian)
 {
-	m_X = x;
-	m_Y = y; 
 	m_R = radius;
 	m_B = begin / 180.0f * M_PI;
 	m_A = radian / 180.0f * M_PI;
@@ -152,6 +165,7 @@ void ArcItem::SetProgress(float p)
 	
 void ArcItem::Draw()
 {
+	m_BB->SetPosition(m_X, m_Y);
 	m_BB->Draw(m_ItemInfo, m_ItemInfo.Count);
 }
 
@@ -183,14 +197,14 @@ void ArcItem::SetAttribute()
 		float s = sin(a);
 		
 		float r = m_R - m_TexInfo.Width / 2;
-		is[0] = c * r + m_X;
-		is[1] = s * r + m_Y;
+		is[0] = c * r;
+		is[1] = s * r;
 		is[2] = m_TexInfo.Right;
 		is[3] = v;
 		
 		r = m_R + m_TexInfo.Width / 2;
-		os[0] = c * r + m_X;
-		os[1] = s * r + m_Y;
+		os[0] = c * r;
+		os[1] = s * r;
 		os[2] = m_TexInfo.Left;
 		os[3] = v;
 	
@@ -233,13 +247,16 @@ DashBoard::DashBoard(Billboard* bb)
 		x += 50.0f;
 	}
 	
-	m_EngineSpeed.SetArc(cx, cy, 250.0f, 234.0f, -288.0f);
+	m_EngineSpeed.SetPosition(cx, cy);
+	m_EngineSpeed.SetArc(250.0f, 234.0f, -288.0f);
 	m_EngineSpeed.SetProgress(0.5f);
 	
-	m_GasOil.SetArc(cx, cy, 203.0f, 225.0f, -90.0f);
+	m_GasOil.SetPosition(cx, cy);
+	m_GasOil.SetArc(203.0f, 225.0f, -90.0f);
 	m_GasOil.SetProgress(0.5f);
 	
-	m_Temp.SetArc(cx, cy, 205.0f, -45.0f, 90.0f);
+	m_Temp.SetPosition(cx, cy);
+	m_Temp.SetArc(205.0f, -45.0f, 90.0f);
 	m_Temp.SetProgress(0.5f);
 }
 
@@ -300,8 +317,17 @@ void DashBoard::Step2()
 	m_Mph.Draw();
 	m_MphNums[0].Draw();
 	m_MphNums[10].Draw();
+	
+	const auto sec = 5 * CLOCKS_PER_SEC;
+	float op = std::min(1.0f, float(m_Time - m_StepStart) / sec);
+	float tp = std::min(0.8f, float(m_Time - m_StepStart) / sec);
+
 	m_EngineSpeed.Draw();
+	
+	m_GasOil.SetProgress(op);
 	m_GasOil.Draw();
+	
+	m_Temp.SetProgress(tp);
 	m_Temp.Draw();		
 }
 
