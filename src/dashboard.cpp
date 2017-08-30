@@ -54,10 +54,10 @@ void RenderItem::Dump(const RenderItem& v)
 	++(*m_Usage);
 }
 
-RectItem::RectItem(const TexInfo& tex, Billboard* bb)
+RectItem::RectItem(const TexInfo& tex, uint32_t mode, Billboard* bb)
  : RenderItem(tex, 4, bb)
 {
-	SetAttribute();
+	SetAttribute(mode);
 }
 
 RectItem::RectItem(const RectItem& v)
@@ -85,28 +85,52 @@ void RectItem::Draw()
 	m_BB->Draw(m_ItemInfo, 4);
 }
 
-void RectItem::SetAttribute()
+void RectItem::SetAttribute(uint32_t mode)
 {
+	float left, right, bottom, top;
+	
+	if(0 == (mode & fmVertical))
+	{
+		top = m_TexInfo.Top;
+		bottom = m_TexInfo.Bottom;
+	}
+	else
+	{
+		top = m_TexInfo.Bottom;
+		bottom = m_TexInfo.Top;
+	}
+	
+	if(0 == (mode & fmHorizonal))
+	{
+		left = m_TexInfo.Left;
+		right = m_TexInfo.Right;
+	}
+	else
+	{
+		left = m_TexInfo.Right;
+		right = m_TexInfo.Left;
+	}
+	
 	float buffer[4 * 4];
 	buffer[0 * 4 + 0] = -m_TexInfo.Width / 2;
 	buffer[0 * 4 + 1] =  m_TexInfo.Height / 2;
-	buffer[0 * 4 + 2] =  m_TexInfo.Left;
-	buffer[0 * 4 + 3] =  m_TexInfo.Bottom;
+	buffer[0 * 4 + 2] =  left;
+	buffer[0 * 4 + 3] =  bottom;
 
 	buffer[1 * 4 + 0] = -m_TexInfo.Width / 2;
 	buffer[1 * 4 + 1] = -m_TexInfo.Height / 2;
-	buffer[1 * 4 + 2] =  m_TexInfo.Left;
-	buffer[1 * 4 + 3] =  m_TexInfo.Top;
+	buffer[1 * 4 + 2] =  left;
+	buffer[1 * 4 + 3] =  top;
 
 	buffer[2 * 4 + 0] =  m_TexInfo.Width / 2;
 	buffer[2 * 4 + 1] =  m_TexInfo.Height / 2;
-	buffer[2 * 4 + 2] =  m_TexInfo.Right;
-	buffer[2 * 4 + 3] =  m_TexInfo.Bottom;
+	buffer[2 * 4 + 2] =  right;
+	buffer[2 * 4 + 3] =  bottom;
 
 	buffer[3 * 4 + 0] =  m_TexInfo.Width / 2;
 	buffer[3 * 4 + 1] = -m_TexInfo.Height / 2;
-	buffer[3 * 4 + 2] =  m_TexInfo.Right;
-	buffer[3 * 4 + 3] =  m_TexInfo.Top;
+	buffer[3 * 4 + 2] =  right;
+	buffer[3 * 4 + 3] =  top;
 	
 	m_BB->SetItemsAttribute(m_ItemInfo, buffer, 4);	
 }
@@ -218,9 +242,9 @@ void ArcItem::SetAttribute()
 DashBoard::DashBoard(Billboard* bb)
  : m_Billboard(bb)
  , m_Textures("./", "texture1.json")
- , m_Background(m_Textures.GetTexRect("background"), m_Billboard)
- , m_Center(m_Textures.GetTexRect("center"), m_Billboard)
- , m_Mph(m_Textures.GetTexRect("mph"), m_Billboard)
+ , m_Background(m_Textures.GetTexRect("background"), 0, m_Billboard)
+ , m_Center(m_Textures.GetTexRect("center"), 0, m_Billboard)
+ , m_Mph(m_Textures.GetTexRect("mph"), 0, m_Billboard)
  , m_EngineSpeed(m_Textures.GetTexRect("enginespeed"), 64, m_Billboard)
  , m_GasOil(m_Textures.GetTexRect("tempoil"), 32, m_Billboard)
  , m_Temp(m_Textures.GetTexRect("tempoil"), 32, m_Billboard)
@@ -241,7 +265,7 @@ DashBoard::DashBoard(Billboard* bb)
 		{
 			std::string name = "mph";
 			name += ('0' + i);
-			m_MphNums.push_back(RectItem(m_Textures.GetTexRect(name.c_str()), m_Billboard));
+			m_MphNums.push_back(RectItem(m_Textures.GetTexRect(name.c_str()), 0, m_Billboard));
 			m_MphNums[d * 10 + i].SetPosition(x, cy + 20.0f);
 		}
 		x += 50.0f;

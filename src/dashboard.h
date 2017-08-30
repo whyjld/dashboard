@@ -34,10 +34,16 @@ protected:
 	int* m_Usage;
 };
 
+enum FlipMode
+{
+	fmVertical  = 0x01,
+	fmHorizonal = 0x02,
+};
+
 class RectItem : public RenderItem
 {
 public:
-	RectItem(const TexInfo& tex, Billboard* bb);
+	RectItem(const TexInfo& tex, uint32_t mode, Billboard* bb);
 	RectItem(const RectItem& v);
 	~RectItem();
 	
@@ -45,7 +51,7 @@ public:
 	
 	void Draw();
 private:
-	void SetAttribute();
+	void SetAttribute(uint32_t mode);
 };
 
 class ArcItem : public RenderItem
