@@ -41,6 +41,7 @@ OBJECTS += \
 	main.o \
 	tga.o \
 	texrect.o \
+	renderitem.o \
 	dashboard.o \
 	billboard.o
 
