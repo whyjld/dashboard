@@ -80,6 +80,26 @@ public:
 	~ArcItem();
 	
 	ArcItem& operator=(const ArcItem& v);
+	
+	float GetRadius() const
+	{
+		return m_R;
+	}
+	
+	float GetBegin() const
+	{
+		return m_B;
+	}
+	
+	float GetRadian() const
+	{
+		return m_A;
+	}
+	
+	float GetProgress() const
+	{
+		return m_P;
+	}
 
 	void SetArc(float radius, float begin, float radian);
 	void SetProgress(float p);
@@ -107,6 +127,8 @@ private:
 	void Step2();
 	void Step3();
 	void Step4();
+	void Step5();
+	void Step6();
 	
 	Billboard* m_Billboard;
 	TexRect m_Textures;
@@ -129,6 +151,7 @@ private:
 	RectItem m_LeftSide;
 	RectItem m_RightSide;
 	RectItem m_ECOSide;
+	std::vector<RectItem> m_ECONums;
 	
 	RectItem m_ECOGAUGE;
 	RectItem m_MAINMENU;
@@ -138,6 +161,9 @@ private:
 	RectItem m_EcoStatistics;
 	RectItem m_SkinSettings;
 	RectItem m_Service;
+	
+	ArcItem m_ECOBar;
+	RectItem m_ECOLight;
 	
 	timeval m_StartTime;
 	timeval m_CurrentTime;

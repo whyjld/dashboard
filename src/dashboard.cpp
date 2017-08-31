@@ -263,6 +263,8 @@ DashBoard::DashBoard(Billboard* bb)
  , m_EcoStatistics(m_Textures.GetTexRect("Eco Statistics"), 0, m_Billboard)
  , m_SkinSettings(m_Textures.GetTexRect("Skin Settings"), 0, m_Billboard)
  , m_Service(m_Textures.GetTexRect("Service"), 0, m_Billboard)
+ , m_ECOBar(m_Textures.GetTexRect("ecobar"), 64, m_Billboard)
+ , m_ECOLight(m_Textures.GetTexRect("light"), 0, m_Billboard)
  , m_Step(0)
 {
 	m_Billboard->SetLogicSize(1920, 720);
@@ -314,6 +316,19 @@ DashBoard::DashBoard(Billboard* bb)
 	
 	m_LeftSide.SetPosition(-m_LeftSide.GetTexInfo().Width / 2, cy);
 	m_RightSide.SetPosition(1920.0f + m_LeftSide.GetTexInfo().Width / 2, cy);
+	
+	x = 1490.0f;
+	for(int d = 0;d < 2;++d)
+	{
+		for(int i = 0;i < 10;++i)
+		{
+			std::string name = "eco";
+			name += ('0' + i);
+			m_ECONums.push_back(RectItem(m_Textures.GetTexRect(name.c_str()), 0, m_Billboard));
+			m_ECONums[d * 10 + i].SetPosition(x, cy + 20.0f);
+		}
+		x += 35.0f;
+	}
 
 	m_ECOGAUGE.SetPosition(1360.0f, 580.0f);
 	m_MAINMENU.SetPosition(560.0f, 580.0f);
@@ -322,6 +337,10 @@ DashBoard::DashBoard(Billboard* bb)
 	m_EcoStatistics.SetPosition(360.0f, 360.0f);
 	m_SkinSettings.SetPosition(370.0f, 280.0f);
 	m_Service.SetPosition(370.0f, 200.0f);
+
+	m_ECOBar.SetPosition(1507.0f, 366.0f);
+	m_ECOBar.SetArc(115.0f, 240.0f, -300.0f);
+	m_ECOBar.SetProgress(0.5f);
 
 	gettimeofday(&m_StartTime, NULL);
 }
@@ -357,6 +376,12 @@ void DashBoard::Draw()
 				break;
 			case 4:
 				Step4();
+				break;
+			case 5:
+				Step5();
+				break;
+			case 6:
+				Step6();
 				break;
 			default:
 				break;
@@ -532,6 +557,9 @@ void DashBoard::Step4()
 	m_Billboard->SetAlpha(ep);
 	m_ECOSide.Draw();
 
+	m_ECONums[0].Draw();
+	m_ECONums[10].Draw();
+
 	m_ECOGAUGE.Draw();
 	m_MAINMENU.Draw();
 	m_TripComputer.Draw();
@@ -539,5 +567,115 @@ void DashBoard::Step4()
 	m_EcoStatistics.Draw();
 	m_SkinSettings.Draw();
 	m_Service.Draw();
+	
+	if(m_Time - m_StepStart > ss)
+	{
+		NextStep();
+		m_ECOSide.SetPosition(m_RightSide.GetX(), m_RightSide.GetY());
+	}
+}
+
+void DashBoard::Step5()
+{
+	glEnable(GL_BLEND);
+	m_Billboard->SetAlpha(1.0f);
+	m_Center.Draw();
+	m_Mph.Draw();
+	m_MphNums[0].Draw();
+	m_MphNums[10].Draw();
+
+	m_LeftOutter.Draw();
+	m_RightOutter.Draw();
+	
+	m_EngineSpeed.Draw();
+
+	m_Ends[0].Draw();
+	m_Ends[1].Draw();
+	m_Ends[2].Draw();
+	m_Ends[3].Draw();
+	
+	m_GasOil.SetProgress(1.0);
+	m_GasOil.Draw();
+	
+	m_Temp.SetProgress(0.8);
+	m_Temp.Draw();
+		
+	m_LeftSide.Draw();
+
+	m_ECOSide.Draw();
+
+	m_ECONums[0].Draw();
+	m_ECONums[10].Draw();
+
+	m_ECOGAUGE.Draw();
+	m_MAINMENU.Draw();
+	m_TripComputer.Draw();
+	m_Assistance.Draw();
+	m_EcoStatistics.Draw();
+	m_SkinSettings.Draw();
+	m_Service.Draw();
+	
+	const long ss = 1000;
+	float ep = std::min(1.0f, float(m_Time - m_StepStart) / ss);
+
+	m_ECOBar.SetProgress(ep);
+	m_ECOBar.Draw();
+	
+	float r = m_ECOBar.GetBegin() + ep * m_ECOBar.GetRadian();
+	float x = cos(r) * m_ECOBar.GetRadius() + m_ECOBar.GetX();
+	float y = sin(r) * m_ECOBar.GetRadius() + m_ECOBar.GetY();
+	
+	m_Billboard->SetAlpha(std::min(1.0f, ep * 10.0f));
+	m_ECOLight.SetPosition(x, y);
+	m_ECOLight.Draw();
+
+	if(m_Time - m_StepStart > ss)
+	{
+		NextStep();
+		m_ECOSide.SetPosition(m_RightSide.GetX(), m_RightSide.GetY());
+	}
+}
+
+void DashBoard::Step6()
+{
+	glEnable(GL_BLEND);
+	m_Billboard->SetAlpha(1.0f);
+	m_Center.Draw();
+	m_Mph.Draw();
+	m_MphNums[0].Draw();
+	m_MphNums[10].Draw();
+
+	m_LeftOutter.Draw();
+	m_RightOutter.Draw();
+	
+	m_EngineSpeed.Draw();
+
+	m_Ends[0].Draw();
+	m_Ends[1].Draw();
+	m_Ends[2].Draw();
+	m_Ends[3].Draw();
+	
+	m_GasOil.SetProgress(1.0);
+	m_GasOil.Draw();
+	
+	m_Temp.SetProgress(0.8);
+	m_Temp.Draw();
+		
+	m_LeftSide.Draw();
+
+	m_ECOSide.Draw();
+
+	m_ECONums[0].Draw();
+	m_ECONums[10].Draw();
+
+	m_ECOGAUGE.Draw();
+	m_MAINMENU.Draw();
+	m_TripComputer.Draw();
+	m_Assistance.Draw();
+	m_EcoStatistics.Draw();
+	m_SkinSettings.Draw();
+	m_Service.Draw();
+	
+	m_ECOBar.Draw();
 }
 
