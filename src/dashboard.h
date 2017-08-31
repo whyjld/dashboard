@@ -130,6 +130,15 @@ private:
 	RectItem m_RightSide;
 	RectItem m_ECOSide;
 	
+	RectItem m_ECOGAUGE;
+	RectItem m_MAINMENU;
+	
+	RectItem m_TripComputer;
+	RectItem m_Assistance;
+	RectItem m_EcoStatistics;
+	RectItem m_SkinSettings;
+	RectItem m_Service;
+	
 	timeval m_StartTime;
 	timeval m_CurrentTime;
 	

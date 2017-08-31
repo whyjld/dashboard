@@ -256,6 +256,13 @@ DashBoard::DashBoard(Billboard* bb)
  , m_LeftSide(m_Textures.GetTexRect("side"), 0, m_Billboard)
  , m_RightSide(m_Textures.GetTexRect("side"), fmHorizonal, m_Billboard)
  , m_ECOSide(m_Textures.GetTexRect("eco"), 0, m_Billboard)
+ , m_ECOGAUGE(m_Textures.GetTexRect("ECO GAUGE"), 0, m_Billboard)
+ , m_MAINMENU(m_Textures.GetTexRect("MAIN MENU"), 0, m_Billboard)
+ , m_TripComputer(m_Textures.GetTexRect("Trip Computer"), 0, m_Billboard)
+ , m_Assistance(m_Textures.GetTexRect("Assistance"), 0, m_Billboard)
+ , m_EcoStatistics(m_Textures.GetTexRect("Eco Statistics"), 0, m_Billboard)
+ , m_SkinSettings(m_Textures.GetTexRect("Skin Settings"), 0, m_Billboard)
+ , m_Service(m_Textures.GetTexRect("Service"), 0, m_Billboard)
  , m_Step(0)
 {
 	m_Billboard->SetLogicSize(1920, 720);
@@ -307,6 +314,14 @@ DashBoard::DashBoard(Billboard* bb)
 	
 	m_LeftSide.SetPosition(-m_LeftSide.GetTexInfo().Width / 2, cy);
 	m_RightSide.SetPosition(1920.0f + m_LeftSide.GetTexInfo().Width / 2, cy);
+
+	m_ECOGAUGE.SetPosition(1360.0f, 580.0f);
+	m_MAINMENU.SetPosition(560.0f, 580.0f);
+	m_TripComputer.SetPosition(420.0f, 520.0f);
+	m_Assistance.SetPosition(350.0f, 440.0f);
+	m_EcoStatistics.SetPosition(360.0f, 360.0f);
+	m_SkinSettings.SetPosition(370.0f, 280.0f);
+	m_Service.SetPosition(370.0f, 200.0f);
 
 	gettimeofday(&m_StartTime, NULL);
 }
@@ -516,5 +531,13 @@ void DashBoard::Step4()
 	m_RightSide.Draw();
 	m_Billboard->SetAlpha(ep);
 	m_ECOSide.Draw();
+
+	m_ECOGAUGE.Draw();
+	m_MAINMENU.Draw();
+	m_TripComputer.Draw();
+	m_Assistance.Draw();
+	m_EcoStatistics.Draw();
+	m_SkinSettings.Draw();
+	m_Service.Draw();
 }
 
