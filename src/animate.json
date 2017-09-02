@@ -1,0 +1,187 @@
+{
+	"items":
+	[
+        {
+            "name":"Background",
+            "rect":"background",
+        	"type":"rect",
+            "VerticalFlip": false,
+            "HorizonalFlip": false,
+            "x": "960.0f",
+            "y": "360.0f"
+        },
+        {
+            "name":"Center",
+            "rect":"center",
+        	"type":"rect",
+            "x": "960.0f",
+            "y": "360.0f"
+        },
+        {
+            "name":"Enginespeed",
+            "rect":"enginespeed",
+        	"type":"arc",
+        	"slice":"64",
+            "x": "960.0f",
+            "y": "360.0f",
+            "radius": "250.0f",
+            "start": "234.0f",
+            "radian": "-288.0f"
+        },
+        {
+            "name":"LeftOutter",
+            "rect":"outter",
+        	"type":"arc",
+        	"slice": "64",
+            "x": "960.0f",
+            "y": "360.0f",
+            "radius": "250.0f",
+            "start": "225.0f",
+            "radian": "-90.0f"
+        },
+        {
+            "name":"RightOutter",
+            "rect":"outter",
+        	"type":"arc",
+        	"slice":64,
+            "x": "960.0f",
+            "y": "360.0f",
+            "radius": "250.0f",
+            "start": "-45.0f",
+            "radian": "90.0f"
+        },
+        {
+            "name":"GasOil",
+            "rect":"tempoil",
+        	"type":"arc",
+        	"slice":32,
+            "x": "960.0f",
+            "y": "360.0f",
+            "radius": "203.0f",
+            "start": "225.0f",
+            "radian": "-90.0f"
+        },
+        {
+            "name":"Temp",
+            "rect":"tempoil",
+        	"type":"arc",
+        	"slice":32,
+            "x": "960.0f",
+            "y": "360.0f",
+            "radius": "203.0f",
+            "start": "-45.0f",
+            "radian": "90.0f"
+        },
+        {
+            "name":"MphUnits",
+            "rect":
+            [
+                "mph0",
+                "mph1",
+                "mph2",
+                "mph3",
+                "mph4",
+                "mph5",
+                "mph6",
+                "mph7",
+                "mph8",
+                "mph9"
+            ],
+        	"type":"rect",
+        	"slice":64,
+            "x": "1000.0f",
+            "y": "360.0f"
+        },
+        {
+            "name":"MphTens",
+            "rect":
+            [
+                "mph0",
+                "mph1",
+                "mph2",
+                "mph3",
+                "mph4",
+                "mph5",
+                "mph6",
+                "mph7",
+                "mph8",
+                "mph9"
+            ],
+        	"type":"rect",
+        	"slice":64,
+            "x": "960.0f",
+            "y": "360.0f"
+        },
+        {
+            "name":"MphHunds",
+            "rect":
+            [
+                "mph0",
+                "mph1",
+                "mph2"
+            ],
+        	"type":"rect",
+        	"slice":64,
+            "x": "920.0f",
+            "y": "360.0f"
+        }
+	],
+	"steps":
+	{
+	    "step1":
+	    [
+            {
+                "begin":0,
+                "end":1000,
+                "items":
+                [
+                    "Background",
+                    "Center"
+                ],
+                "alpha":
+                {
+                    "b": "0.001f"
+                },
+                "x":
+                {
+                    "c": "960.0f"
+                },
+                "y":
+                {
+                    "c": "360.0f"
+                }
+            },
+            {
+                "begin":1000,
+                "end":2000,
+                "items":
+                [
+                    "Background",
+                    "Center"
+                ]
+            },
+            {
+                "begin":2000,
+                "end":2000000,
+                "items":
+                [
+                    "Background",
+                    "Center"
+                ]
+            }
+	    ],
+	    "step2":
+	    [
+            {
+                "begin":0,
+                "end":10000,
+                "items":
+                [
+                    "Background",
+                    "Center",
+                    "Enginespeed"
+                ]
+            }
+	    ]
+	}
+}
