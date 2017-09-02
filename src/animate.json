@@ -89,40 +89,7 @@
             ],
         	"type":"rect",
         	"slice":64,
-            "x": "1000.0f",
-            "y": "360.0f"
-        },
-        {
-            "name":"MphTens",
-            "rect":
-            [
-                "mph0",
-                "mph1",
-                "mph2",
-                "mph3",
-                "mph4",
-                "mph5",
-                "mph6",
-                "mph7",
-                "mph8",
-                "mph9"
-            ],
-        	"type":"rect",
-        	"slice":64,
             "x": "960.0f",
-            "y": "360.0f"
-        },
-        {
-            "name":"MphHunds",
-            "rect":
-            [
-                "mph0",
-                "mph1",
-                "mph2"
-            ],
-        	"type":"rect",
-        	"slice":64,
-            "x": "920.0f",
             "y": "360.0f"
         }
 	],

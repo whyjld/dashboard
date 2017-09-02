@@ -66,12 +66,52 @@ void %classname%::DisplayInstrument()
 {
     //mph
     long v = m_Datas->Speed;
-    long d = v % 10;
-    m_MphUnits[d].Draw();
-    d = (v / 10) % 10;
-    m_MphTens[d].Draw();
-    d = (v / 100) % 10;
-    m_MphHunds[d].Draw();
+    if(v > 99)
+    {
+        auto x = m_MphUnits[0].GetX();
+        auto y = m_MphUnits[0].GetY();
+        
+        long d = (v / 10) % 10;
+        auto& t = m_MphUnits[d];
+        t.Draw();
+
+        d = v % 10;
+        auto& u = m_MphUnits[d];
+        u.SetPosition(x + 40, y);
+        u.Draw();
+        u.SetPosition(x, y);
+        
+        d = (v / 100) % 10;
+        auto& h = m_MphUnits[d];
+        h.SetPosition(x - 40, y);
+        h.Draw();
+        h.SetPosition(x, y);
+        
+        
+    }
+    else if(v > 9)
+    {
+        auto x = m_MphUnits[0].GetX();
+        auto y = m_MphUnits[0].GetY();
+        
+        long d = v % 10;
+        auto& u = m_MphUnits[d];
+        u.SetPosition(x + 20, y);
+        u.Draw();
+        u.SetPosition(x, y);
+        
+        d = (v / 10) % 10;
+        auto& t = m_MphUnits[d];
+        t.SetPosition(x - 20, y);
+        t.Draw();
+        t.SetPosition(x, y);
+    }
+    else if(v < 10)
+    {
+        long d = v % 10;
+        m_MphUnits[d].Draw();
+    }
+
 }
 
 %implement%
