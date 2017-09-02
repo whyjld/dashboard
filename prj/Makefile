@@ -45,7 +45,7 @@ OBJECTS += \
 	dashboard.o \
 	billboard.o
 
-DEPS += -lstdc++ -lm -ldl -lwebp -lpthread -Wl,--library-path=$(TARGET_PATH_LIB),-rpath-link=$(TARGET_PATH_LIB)
+DEPS += -lstdc++ -lrt -lm -ldl -lwebp -lpthread -Wl,--library-path=$(TARGET_PATH_LIB),-rpath-link=$(TARGET_PATH_LIB)
 
 ifeq ($(ARCH),arm)
 	OBJECTS += eglc.o
