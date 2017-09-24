@@ -65,7 +65,7 @@
             "name":"LeftBottomBlock",
             "rect":"outblock",
         	"type":"arc",
-        	"slice":32,
+        	"slice": "32",
             "x": "960.0f",
             "y": "360.0f",
             "radius": "900.0f",
@@ -93,6 +93,68 @@
             "radius": "900.0f",
             "start": "210.0f",
             "radian": "-15.0f"
+        },
+        {
+            "name":"LeftUpBar",
+            "rect":"blockbar",
+        	"type":"arc",
+        	"slice": "64",
+            "x": "960.0f",
+            "y": "360.0f",
+            "radius": "925.0f",
+            "start": "150.0f",
+            "radian": "45.0f"
+        },
+        {
+            "name":"LeftBottomBar",
+            "rect":"blockbar",
+        	"type":"arc",
+        	"slice": "64",
+            "x": "960.0f",
+            "y": "360.0f",
+            "radius": "925.0f",
+            "start": "210.0f",
+            "radian": "45.0f"
+        },
+        {
+            "name":"RightUpBar",
+            "rect":"blockbar",
+        	"type":"arc",
+        	"slice": "64",
+            "x": "960.0f",
+            "y": "360.0f",
+            "radius": "925.0f",
+            "start": "150.0f",
+            "radian": "-45.0f"
+        },
+        {
+            "name":"RightBottomBar",
+            "rect":"blockbar",
+        	"type":"arc",
+        	"slice":64,
+            "x": "960.0f",
+            "y": "360.0f",
+            "radius": "925.0f",
+            "start": "210.0f",
+            "radian": "-45.0f"
+        },
+        {
+            "name":"LeftSide",
+            "rect":"side",
+        	"type":"rect",
+            "VerticalFlip": false,
+            "HorizonalFlip": false,
+            "x": "460.0f",
+            "y": "360.0f"
+        },
+        {
+            "name":"RightSide",
+            "rect":"side",
+        	"type":"rect",
+            "VerticalFlip": false,
+            "HorizonalFlip": true,
+            "x": "1460.0f",
+            "y": "360.0f"
         },
         {
             "name":"GasOil",
@@ -183,7 +245,7 @@
 	    [
             {
                 "begin":0,
-                "end":2000,
+                "end":3000,
                 "items":
                 [
                     "Background",
@@ -257,10 +319,116 @@
                 }
             },
             {
-                "begin":1000,
-                "end":2000,
+                "begin":2500,
+                "end":3000,
                 "items":
                 [
+                    "LeftSide"
+                ],
+                "x":
+                {
+                    "b": "0.5f",
+                    "c": "-1030.0f"
+                }
+            },
+            {
+                "begin":2500,
+                "end":3000,
+                "items":
+                [
+                    "RightSide"
+                ],
+                "x":
+                {
+                    "b": "-0.5f",
+                    "c": "2950.0f"
+                }
+            },
+            {
+                "begin":1000,
+                "end":2500,
+                "items":
+                [
+                    "LeftUpBar"
+                ],
+                "start":
+                {
+                    "b": "0.03f",
+                    "c": "65.0f"
+                }
+            },
+            {
+                "begin":1000,
+                "end":2500,
+                "items":
+                [
+                    "LeftBottomBar"
+                ],
+                "start":
+                {
+                    "b": "-0.03f",
+                    "c": "250.0f"
+                }
+            },
+            {
+                "begin":1000,
+                "end":2500,
+                "items":
+                [
+                    "RightUpBar"
+                ],
+                "start":
+                {
+                    "b": "-0.03f",
+                    "c": "115.0f"
+                }
+            },
+            {
+                "begin":1000,
+                "end":2500,
+                "items":
+                [
+                    "RightBottomBar"
+                ],
+                "start":
+                {
+                    "b": "0.03f",
+                    "c": "290.0f"
+                }
+            },
+            {
+                "begin":2000,
+                "end":2500,
+                "items":
+                [
+                    "LeftUpBlock",
+                    "LeftBottomBlock",
+                    "RightUpBlock",
+                    "RightBottomBlock"
+                ]
+            },
+            {
+                "begin":1000,
+                "end":2500,
+                "items":
+                [
+                    "LeftOutter",
+                    "RightOutter"
+                ]
+            },
+            {
+                "begin":2500,
+                "end":3000,
+                "items":
+                [
+                    "LeftUpBar",
+                    "LeftBottomBar",
+                    "RightUpBar",
+                    "RightBottomBar",
+                    "LeftUpBlock",
+                    "LeftBottomBlock",
+                    "RightUpBlock",
+                    "RightBottomBlock",
                     "LeftOutter",
                     "RightOutter"
                 ]
@@ -275,12 +443,18 @@
                 [
                     "Background",
                     "Center",
-                    "LeftOutter",
-                    "RightOutter",
+                    "LeftSide",
+                    "RightSide",
+                    "LeftUpBar",
+                    "LeftBottomBar",
+                    "RightUpBar",
+                    "RightBottomBar",
                     "LeftUpBlock",
                     "LeftBottomBlock",
                     "RightUpBlock",
-                    "RightBottomBlock"
+                    "RightBottomBlock",
+                    "LeftOutter",
+                    "RightOutter"
                 ]
             }
 	    ]
