@@ -21,11 +21,14 @@ private:
 	long MicroSecond();
 	void NextStep();
 
+    void DisplayMph(long v);
     void DisplayInstrument();
-
 %defines%
 
-	ShareMemory<Datas> m_Datas;
+	ShareMemory<Datas> m_DestDatas;
+	Datas m_CurrDatas;
+	float m_MphProg;
+	
 	Billboard* m_Billboard;
 	TexRect m_Textures;
     	

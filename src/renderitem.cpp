@@ -149,7 +149,7 @@ ArcItem::ArcItem(const TexInfo& tex, GLsizei slice, Billboard* bb)
  , m_R(0.0f)
  , m_B(0.0f)
  , m_A(0.0f)
- , m_P(0.0f)
+ , m_P(1.0f)
 {
 }
 
@@ -183,8 +183,8 @@ ArcItem& ArcItem::operator=(const ArcItem& v)
 void ArcItem::SetArc(float radius, float begin, float radian)
 {
 	m_R = radius;
-	m_B = begin / 180.0f * M_PI;
-	m_A = radian / 180.0f * M_PI;
+	m_B = begin;
+	m_A = radian;
 	
 	SetAttribute();
 }
@@ -218,7 +218,7 @@ void ArcItem::SetAttribute()
 	float t = (m_TexInfo.Top - m_TexInfo.Bottom) * m_P / c;
 	for(GLsizei i = 0;i < c + 1;++i)
 	{
-		float a = m_B + s * i;
+		float a = (m_B + s * i) / 180.0f * M_PI;
 		float v = m_TexInfo.Bottom + t * i;
 		float c = cos(a);
 		float s = sin(a);

@@ -26,6 +26,11 @@ public:
 	void SetTranslation(float x, float y, float s);
 	void Draw(const ItemInfo& items, GLsizei count);
 	void End() const;
+	
+	float GetAlpha() const
+	{
+	    return m_Alpha;
+	}
 private:
 	void InitGL();
 	void CleanUpGL();
@@ -49,6 +54,8 @@ private:
 	GLuint m_VPLocation;
 
 	GLuint m_Program;
+	
+	float m_Alpha;
 };
 
 #endif//_BILLBOARD_h_

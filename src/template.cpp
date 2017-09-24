@@ -4,13 +4,15 @@
 #include <cmath>
 
 %classname%::%classname%(Billboard* bb)
- : m_Datas("DashBoard", true)
+ : m_DestDatas("DashBoard", true)
+ , m_MphProg(0.0f)
  , m_Billboard(bb)
  , m_Textures("./", "texture1.json")
  , m_Step(0)
 %constructline%
 {
-    memset(m_Datas.get(), sizeof(Datas), 0);
+    memset(m_DestDatas.get(), 0, sizeof(Datas));
+    memset(&m_CurrDatas,      0, sizeof(Datas));
 
 	m_Billboard->SetLogicSize(1920, 720);
 
@@ -62,10 +64,8 @@ void %classname%::NextStep()
 	m_StepStart = m_Time;
 }
 
-void %classname%::DisplayInstrument()
+void %classname%::DisplayMph(long v)
 {
-    //mph
-    long v = m_Datas->Speed;
     if(v > 99)
     {
         auto x = m_MphUnits[0].GetX();
@@ -111,7 +111,48 @@ void %classname%::DisplayInstrument()
         long d = v % 10;
         m_MphUnits[d].Draw();
     }
+}
 
+void %classname%::DisplayInstrument()
+{
+    //mph
+    long cv = m_CurrDatas.Speed;
+    long dv = m_DestDatas->Speed;
+
+    if(cv != dv)
+    {
+        m_MphProg += 0.1f;
+        if(m_MphProg > 1.0f)
+        {
+            m_CurrDatas.Speed = m_DestDatas->Speed;
+            m_MphProg = 0.0f;
+
+            DisplayMph(dv);
+        }
+        else
+        {
+            float alpha = m_Billboard->GetAlpha();
+            m_Billboard->SetAlpha(alpha * (1.0f - m_MphProg));
+            DisplayMph(cv);
+            m_Billboard->SetAlpha(alpha * m_MphProg);
+            DisplayMph(dv);
+            m_Billboard->SetAlpha(alpha);
+        }
+    }
+    else
+    {
+        DisplayMph(cv);
+    }
+    
+    //Engine speed
+    m_Enginespeed.SetProgress(std::min(1.0f, m_DestDatas->EngineSpeed / 8000.0f));
+    m_Enginespeed.Draw();
+    //GasOil
+    m_GasOil.SetProgress(std::min(1.0f, m_DestDatas->OilMass / 100.0f));
+    m_GasOil.Draw();
+    //Temperature
+    m_Temp.SetProgress(std::min(1.0f, m_DestDatas->WaterTemperature / 99.0f));
+    m_Temp.Draw();
 }
 
 %implement%

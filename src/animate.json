@@ -35,9 +35,9 @@
         	"slice": "64",
             "x": "960.0f",
             "y": "360.0f",
-            "radius": "250.0f",
-            "start": "225.0f",
-            "radian": "-90.0f"
+            "radius": "280.0f",
+            "start": "230.0f",
+            "radian": "-100.0f"
         },
         {
             "name":"RightOutter",
@@ -46,9 +46,53 @@
         	"slice":64,
             "x": "960.0f",
             "y": "360.0f",
-            "radius": "250.0f",
-            "start": "-45.0f",
-            "radian": "90.0f"
+            "radius": "280.0f",
+            "start": "-50.0f",
+            "radian": "100.0f"
+        },
+        {
+            "name":"LeftUpBlock",
+            "rect":"outblock",
+        	"type":"arc",
+        	"slice": "32",
+            "x": "960.0f",
+            "y": "360.0f",
+            "radius": "900.0f",
+            "start": "150.0f",
+            "radian": "15.0f"
+        },
+        {
+            "name":"LeftBottomBlock",
+            "rect":"outblock",
+        	"type":"arc",
+        	"slice":32,
+            "x": "960.0f",
+            "y": "360.0f",
+            "radius": "900.0f",
+            "start": "210.0f",
+            "radian": "15.0f"
+        },
+        {
+            "name":"RightUpBlock",
+            "rect":"outblock",
+        	"type":"arc",
+        	"slice": "32",
+            "x": "960.0f",
+            "y": "360.0f",
+            "radius": "900.0f",
+            "start": "150.0f",
+            "radian": "-15.0f"
+        },
+        {
+            "name":"RightBottomBlock",
+            "rect":"outblock",
+        	"type":"arc",
+        	"slice":32,
+            "x": "960.0f",
+            "y": "360.0f",
+            "radius": "900.0f",
+            "start": "210.0f",
+            "radian": "-15.0f"
         },
         {
             "name":"GasOil",
@@ -103,7 +147,9 @@
                 "items":
                 [
                     "Background",
-                    "Center"
+                    "Center",
+                    "LeftOutter",
+                    "RightOutter"
                 ],
                 "alpha":
                 {
@@ -117,9 +163,26 @@
                 {
                     "c": "360.0f"
                 }
-            },
+            }
+	    ],
+	    "step2":
+	    [
             {
-                "begin":1000,
+                "begin":0,
+                "end":3000,
+                "items":
+                [
+                    "Background",
+                    "Center",
+                    "LeftOutter",
+                    "RightOutter"
+                ]
+            }
+	    ],
+	    "step3":
+	    [
+            {
+                "begin":0,
                 "end":2000,
                 "items":
                 [
@@ -128,25 +191,96 @@
                 ]
             },
             {
-                "begin":2000,
-                "end":2000000,
+                "begin":0,
+                "end":1000,
                 "items":
                 [
-                    "Background",
-                    "Center"
+                    "LeftOutter",
+                    "RightOutter"
+                ],
+                "radius":
+                {
+                    "b": "0.52f",
+                    "c": "280.0f"
+                }
+            },
+            {
+                "begin":1000,
+                "end":2000,
+                "items":
+                [
+                    "LeftUpBlock"
+                ],
+                "start":
+                {
+                    "b": "0.03f",
+                    "c": "100.0f"
+                }
+            },
+            {
+                "begin":1000,
+                "end":2000,
+                "items":
+                [
+                    "LeftBottomBlock"
+                ],
+                "start":
+                {
+                    "b": "-0.03f",
+                    "c": "245.0f"
+                }
+            },
+            {
+                "begin":1000,
+                "end":2000,
+                "items":
+                [
+                    "RightUpBlock"
+                ],
+                "start":
+                {
+                    "b": "-0.03f",
+                    "c": "80.0f"
+                }
+            },
+            {
+                "begin":1000,
+                "end":2000,
+                "items":
+                [
+                    "RightBottomBlock"
+                ],
+                "start":
+                {
+                    "b": "0.03f",
+                    "c": "295.0f"
+                }
+            },
+            {
+                "begin":1000,
+                "end":2000,
+                "items":
+                [
+                    "LeftOutter",
+                    "RightOutter"
                 ]
             }
 	    ],
-	    "step2":
+	    "step4":
 	    [
             {
                 "begin":0,
-                "end":10000,
+                "end":3000,
                 "items":
                 [
                     "Background",
                     "Center",
-                    "Enginespeed"
+                    "LeftOutter",
+                    "RightOutter",
+                    "LeftUpBlock",
+                    "LeftBottomBlock",
+                    "RightUpBlock",
+                    "RightBottomBlock"
                 ]
             }
 	    ]

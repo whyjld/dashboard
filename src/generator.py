@@ -128,7 +128,7 @@ class Step:
     def Call(self):
         return "\t\t\t\t" + self.Name.title() + "();\n";     
 
-    def Implement(self):
+    def Implement(self, objs):
         ret = "void " + g_ClassName + "::" + self.Name.title() + '''()
 {
 \tconst long ms = m_Time - m_StepStart;
@@ -139,7 +139,7 @@ class Step:
         for a in self.Animations:
             if end < a.End:
                 end = a.End
-            ret += "\tif(ms >= " + str(a.Begin) + " && ms < " + str(a.End) + ''')\n
+            ret += "\tif(ms >= " + str(a.Begin) + " && ms < " + str(a.End) + ''')
 \t{
 '''
             if a.Alpha:
@@ -174,46 +174,47 @@ class Step:
                 ret += "\t\tfloat start = " + a.Start.str("ms") + ";\n"
                 ret += "\t\tfloat radian = " + a.Radian.str("ms") + ";\n"
                 for i in a.Items:
-                    if i.Type == "arc":
+                    if objs[i].Type == "arc":
                         ret += "\t\tm_" + i + ".SetArc(radius, start, radian);\n"
             elif a.Radius and a.Start:
                 ret += "\t\tfloat radius = " + a.Radius.str("ms") + ";\n"
                 ret += "\t\tfloat start = " + a.Start.str("ms") + ";\n"
                 for i in a.Items:
-                    if i.Type == "arc":
+                    if objs[i].Type == "arc":
                         ret += "\t\tm_" + i + ".SetArc(radius, start, m_" + i + ".GetRadian());\n"
             elif a.Radius and a.Radian:
                 ret += "\t\tfloat radius = " + a.Radius.str("ms") + ";\n"
                 ret += "\t\tfloat radian = " + a.Radian.str("ms") + ";\n"
                 for i in a.Items:
-                    if i.Type == "arc":
-                        ret += "\t\tm_" + i + ".SetArc(radius, m_" + i + ".GetStart(), radian);\n"
+                    if objs[i].Type == "arc":
+                        ret += "\t\tm_" + i + ".SetArc(radius, m_" + i + ".GetBegin(), radian);\n"
             elif a.Start and a.Radian:
                 ret += "\t\tfloat start = " + a.Start.str("ms") + ";\n"
                 ret += "\t\tfloat radian = " + a.Radian.str("ms") + ";\n"
                 for i in a.Items:
-                    if i.Type == "arc":
+                    if objs[i].Type == "arc":
                         ret += "\t\tm_" + i + ".SetArc(m_" + i + ".GetRadius(), start, radian);\n"
             elif a.Radius:
                 ret += "\t\tfloat radius = " + a.Radius.str("ms") + ";\n"
                 for i in a.Items:
-                    if i.Type == "arc":
-                        ret += "\t\tm_" + i + ".SetArc(radius, m_" + i + ".GetStart(), m_" + i + ".GetRadian());\n"
+                    if objs[i].Type == "arc":
+                        ret += "\t\tm_" + i + ".SetArc(radius, m_" + i + ".GetBegin(), m_" + i + ".GetRadian());\n"
             elif a.Start:
                 ret += "\t\tfloat start = " + a.Start.str("ms") + ";\n"
                 for i in a.Items:
-                    if i.Type == "arc":
+                    if objs[i].Type == "arc":
                         ret += "\t\tm_" + i + ".SetArc(m_" + i + ".GetRadius(), start, m_" + i + ".GetRadian());\n"
             elif a.Radian:
                 ret += "\t\tfloat radian = " + a.Radian.str("ms") + ";\n"
                 for i in a.Items:
-                    if i.Type == "arc":
-                        ret += "\t\tm_" + i + ".SetArc(m_" + i + ".GetRadius(), m_" + i + ".GetStart(), radian);\n"
+                    if objs[i].Type == "arc":
+                        ret += "\t\tm_" + i + ".SetArc(m_" + i + ".GetRadius(), m_" + i + ".GetBegin(), radian);\n"
             
             if a.Progress:
                 ret += "\t\tfloat p = " + a.Progress.str("ms") + ";\n"
                 for i in a.Items:
-                    ret += "\t\tm_" + i + ".SetProgress(p);\n"
+                    if objs[i].Type == "arc":
+                        ret += "\t\tm_" + i + ".SetProgress(p);\n"
 
             for i in a.Items:
                 ret += "\t\tm_" + i + ".Draw();\n"
@@ -221,7 +222,7 @@ class Step:
             
         ret += "\tDisplayInstrument();\n"
 
-        ret += "\tif(ms > " + str(end) + ")\n"
+        ret += "\tif(ms >= " + str(end) + ")\n"
         ret += "\t{\n"
         ret += "\t\tNextStep();\n"
         ret += "\t}\n"
@@ -243,7 +244,9 @@ def SetEquation(dst, att0, src, att1):
 
 def LoadObjects(filename):
     file = open(filename, 'r')
-    data = json.load(file)
+    
+    from collections import OrderedDict
+    data = json.load(file, object_pairs_hook=OrderedDict)
     
     itemList = []
     stepList = []
@@ -297,6 +300,11 @@ if len(sys.argv) != 5:
 g_ClassName = sys.argv[4];
 objectList, animateList = LoadObjects(sys.argv[1])
 
+objectMap = {}
+
+for o in objectList:
+    objectMap[o.Name] = o
+
 #write header file
 tf = open(sys.argv[2], "rt")
 template = tf.read()
@@ -342,7 +350,7 @@ template = template.replace("%steps%", out)
 
 out = ""
 for a in animateList:
-    out += a.Implement()
+    out += a.Implement(objectMap)
 template = template.replace("%implement%", out)
 
 out = open(g_ClassName.lower() + ".cpp", "wt")

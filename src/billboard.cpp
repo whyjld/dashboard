@@ -5,6 +5,7 @@
 
 Billboard::Billboard(GLsizei count)
  : m_ItemCount(count)
+ , m_Alpha(1.0f)
 {
 	InitGL();
 
@@ -149,7 +150,7 @@ void Billboard::InitShaders()
 	glUniform1i(tex, 0);
 
 	m_AlphaLocation = glGetUniformLocation(m_Program, "alpha");
-	glUniform1f(m_AlphaLocation, 1.0f);
+	glUniform1f(m_AlphaLocation, m_Alpha);
 	
 	m_TransLocation = glGetUniformLocation(m_Program, "trans");
 	glUniform4f(m_TransLocation, 0.0f, 0.0f, 1.0f, 0.0f);
@@ -298,7 +299,11 @@ void Billboard::Begin() const
 
 void Billboard::SetAlpha(float alpha)
 {
-	glUniform1f(m_AlphaLocation, alpha);
+    if(m_Alpha != alpha)
+    {
+        m_Alpha = alpha;
+	    glUniform1f(m_AlphaLocation, m_Alpha);
+	}
 }
 
 void Billboard::SetTranslation(float x, float y, float s)

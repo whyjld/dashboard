@@ -21,13 +21,18 @@ private:
 	long MicroSecond();
 	void NextStep();
 
+    void DisplayMph(long v);
     void DisplayInstrument();
-
 	void Step1();
 	void Step2();
+	void Step3();
+	void Step4();
 
 
-	ShareMemory<Datas> m_Datas;
+	ShareMemory<Datas> m_DestDatas;
+	Datas m_CurrDatas;
+	float m_MphProg;
+	
 	Billboard* m_Billboard;
 	TexRect m_Textures;
     	
@@ -44,6 +49,10 @@ private:
 	ArcItem m_Enginespeed;
 	ArcItem m_LeftOutter;
 	ArcItem m_RightOutter;
+	ArcItem m_LeftUpBlock;
+	ArcItem m_LeftBottomBlock;
+	ArcItem m_RightUpBlock;
+	ArcItem m_RightBottomBlock;
 	ArcItem m_GasOil;
 	ArcItem m_Temp;
 	std::vector<RectItem> m_MphUnits;
