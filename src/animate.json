@@ -157,6 +157,15 @@
             "y": "360.0f"
         },
         {
+            "name":"EcoSide",
+            "rect":"eco",
+        	"type":"rect",
+            "VerticalFlip": false,
+            "HorizonalFlip": false,
+            "x": "1460.0f",
+            "y": "360.0f"
+        },
+        {
             "name":"GasOil",
             "rect":"tempoil",
         	"type":"arc",
@@ -177,6 +186,51 @@
             "radius": "203.0f",
             "start": "-45.0f",
             "radian": "90.0f"
+        },
+        {
+            "name":"TripComputer",
+            "rect":"Trip Computer",
+        	"type":"rect",
+            "VerticalFlip": false,
+            "HorizonalFlip": false,
+            "x": "460.0f",
+            "y": "520.0f"
+        },
+        {
+            "name":"Assistance",
+            "rect":"Assistance",
+        	"type":"rect",
+            "VerticalFlip": false,
+            "HorizonalFlip": false,
+            "x": "400.0f",
+            "y": "440.0f"
+        },
+        {
+            "name":"EcoStatistics",
+            "rect":"Eco Statistics",
+        	"type":"rect",
+            "VerticalFlip": false,
+            "HorizonalFlip": false,
+            "x": "400.0f",
+            "y": "360.0f"
+        },
+        {
+            "name":"SkinSettings",
+            "rect":"Skin Settings",
+        	"type":"rect",
+            "VerticalFlip": false,
+            "HorizonalFlip": false,
+            "x": "420.0f",
+            "y": "280.0f"
+        },
+        {
+            "name":"Service",
+            "rect":"Service",
+        	"type":"rect",
+            "VerticalFlip": false,
+            "HorizonalFlip": false,
+            "x": "420.0f",
+            "y": "200.0f"
         },
         {
             "name":"MphUnits",
@@ -245,7 +299,7 @@
 	    [
             {
                 "begin":0,
-                "end":3000,
+                "end":3500,
                 "items":
                 [
                     "Background",
@@ -417,8 +471,47 @@
                 ]
             },
             {
+                "begin":3000,
+                "end":3500,
+                "items":
+                [
+                    "TripComputer",
+                    "Assistance",
+                    "EcoStatistics",
+                    "SkinSettings",
+                    "Service",
+                    "EcoSide"
+                ],
+                "alpha":
+                {
+                    "b": "0.002f",
+                    "c": "-6.0f"
+                }
+            },
+            {
+                "begin":3000,
+                "end":3500,
+                "items":
+                [
+                    "LeftSide"
+                ]
+            },
+            {
+                "begin":3000,
+                "end":3500,
+                "items":
+                [
+                    "RightSide"
+                ],
+                "alpha":
+                {
+                    "b": "-0.002f",
+                    "c": "7.0f"
+                }
+            },
+            {
                 "begin":2500,
-                "end":3000,
+                "end":3500,
                 "items":
                 [
                     "LeftUpBar",
@@ -438,13 +531,13 @@
 	    [
             {
                 "begin":0,
-                "end":3000,
+                "end":30000,
                 "items":
                 [
                     "Background",
                     "Center",
                     "LeftSide",
-                    "RightSide",
+                    "EcoSide",
                     "LeftUpBar",
                     "LeftBottomBar",
                     "RightUpBar",
@@ -454,7 +547,12 @@
                     "RightUpBlock",
                     "RightBottomBlock",
                     "LeftOutter",
-                    "RightOutter"
+                    "RightOutter",
+                    "TripComputer",
+                    "Assistance",
+                    "EcoStatistics",
+                    "SkinSettings",
+                    "Service"
                 ]
             }
 	    ]

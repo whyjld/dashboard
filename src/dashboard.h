@@ -53,8 +53,20 @@ private:
 	ArcItem m_LeftBottomBlock;
 	ArcItem m_RightUpBlock;
 	ArcItem m_RightBottomBlock;
+	ArcItem m_LeftUpBar;
+	ArcItem m_LeftBottomBar;
+	ArcItem m_RightUpBar;
+	ArcItem m_RightBottomBar;
+	RectItem m_LeftSide;
+	RectItem m_RightSide;
+	RectItem m_EcoSide;
 	ArcItem m_GasOil;
 	ArcItem m_Temp;
+	RectItem m_TripComputer;
+	RectItem m_Assistance;
+	RectItem m_EcoStatistics;
+	RectItem m_SkinSettings;
+	RectItem m_Service;
 	std::vector<RectItem> m_MphUnits;
 
 };

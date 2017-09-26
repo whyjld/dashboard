@@ -18,8 +18,20 @@ DashBoard::DashBoard(Billboard* bb)
  , m_LeftBottomBlock(m_Textures.GetTexRect("outblock"), 32, m_Billboard)
  , m_RightUpBlock(m_Textures.GetTexRect("outblock"), 32, m_Billboard)
  , m_RightBottomBlock(m_Textures.GetTexRect("outblock"), 32, m_Billboard)
+ , m_LeftUpBar(m_Textures.GetTexRect("blockbar"), 64, m_Billboard)
+ , m_LeftBottomBar(m_Textures.GetTexRect("blockbar"), 64, m_Billboard)
+ , m_RightUpBar(m_Textures.GetTexRect("blockbar"), 64, m_Billboard)
+ , m_RightBottomBar(m_Textures.GetTexRect("blockbar"), 64, m_Billboard)
+ , m_LeftSide(m_Textures.GetTexRect("side"), 0, m_Billboard)
+ , m_RightSide(m_Textures.GetTexRect("side"), 2, m_Billboard)
+ , m_EcoSide(m_Textures.GetTexRect("eco"), 0, m_Billboard)
  , m_GasOil(m_Textures.GetTexRect("tempoil"), 32, m_Billboard)
  , m_Temp(m_Textures.GetTexRect("tempoil"), 32, m_Billboard)
+ , m_TripComputer(m_Textures.GetTexRect("Trip Computer"), 0, m_Billboard)
+ , m_Assistance(m_Textures.GetTexRect("Assistance"), 0, m_Billboard)
+ , m_EcoStatistics(m_Textures.GetTexRect("Eco Statistics"), 0, m_Billboard)
+ , m_SkinSettings(m_Textures.GetTexRect("Skin Settings"), 0, m_Billboard)
+ , m_Service(m_Textures.GetTexRect("Service"), 0, m_Billboard)
 
 {
     memset(m_DestDatas.get(), 0, sizeof(Datas));
@@ -43,10 +55,26 @@ DashBoard::DashBoard(Billboard* bb)
 	m_RightUpBlock.SetArc(900.0f, 150.0f, -15.0f);
 	m_RightBottomBlock.SetPosition(960.0f, 360.0f);
 	m_RightBottomBlock.SetArc(900.0f, 210.0f, -15.0f);
+	m_LeftUpBar.SetPosition(960.0f, 360.0f);
+	m_LeftUpBar.SetArc(925.0f, 150.0f, 45.0f);
+	m_LeftBottomBar.SetPosition(960.0f, 360.0f);
+	m_LeftBottomBar.SetArc(925.0f, 210.0f, 45.0f);
+	m_RightUpBar.SetPosition(960.0f, 360.0f);
+	m_RightUpBar.SetArc(925.0f, 150.0f, -45.0f);
+	m_RightBottomBar.SetPosition(960.0f, 360.0f);
+	m_RightBottomBar.SetArc(925.0f, 210.0f, -45.0f);
+	m_LeftSide.SetPosition(460.0f, 360.0f);
+	m_RightSide.SetPosition(1460.0f, 360.0f);
+	m_EcoSide.SetPosition(1460.0f, 360.0f);
 	m_GasOil.SetPosition(960.0f, 360.0f);
 	m_GasOil.SetArc(203.0f, 225.0f, -90.0f);
 	m_Temp.SetPosition(960.0f, 360.0f);
 	m_Temp.SetArc(203.0f, -45.0f, 90.0f);
+	m_TripComputer.SetPosition(460.0f, 520.0f);
+	m_Assistance.SetPosition(400.0f, 440.0f);
+	m_EcoStatistics.SetPosition(400.0f, 360.0f);
+	m_SkinSettings.SetPosition(420.0f, 280.0f);
+	m_Service.SetPosition(420.0f, 200.0f);
 	m_MphUnits.push_back(RectItem(m_Textures.GetTexRect("mph0"), 0, m_Billboard));
 	m_MphUnits[m_MphUnits.size() - 1].SetPosition(960.0f, 360.0f);
 	m_MphUnits.push_back(RectItem(m_Textures.GetTexRect("mph1"), 0, m_Billboard));
@@ -262,7 +290,7 @@ void DashBoard::Step2()
 void DashBoard::Step3()
 {
 	const long ms = m_Time - m_StepStart;
-	if(ms >= 0 && ms < 2000)
+	if(ms >= 0 && ms < 3500)
 	{
 		m_Billboard->SetAlpha(1.0f);
 		m_Background.Draw();
@@ -300,13 +328,92 @@ void DashBoard::Step3()
 		m_RightBottomBlock.SetArc(m_RightBottomBlock.GetRadius(), start, m_RightBottomBlock.GetRadian());
 		m_RightBottomBlock.Draw();
 	}
-	if(ms >= 1000 && ms < 2000)
+	if(ms >= 2500 && ms < 3000)
+	{
+		float x = ms * 0.5f + -1030.0f;
+		m_LeftSide.SetPosition(x, m_LeftSide.GetY());
+		m_LeftSide.Draw();
+	}
+	if(ms >= 2500 && ms < 3000)
+	{
+		float x = ms * -0.5f + 2950.0f;
+		m_RightSide.SetPosition(x, m_RightSide.GetY());
+		m_RightSide.Draw();
+	}
+	if(ms >= 1000 && ms < 2500)
+	{
+		float start = ms * 0.03f + 65.0f;
+		m_LeftUpBar.SetArc(m_LeftUpBar.GetRadius(), start, m_LeftUpBar.GetRadian());
+		m_LeftUpBar.Draw();
+	}
+	if(ms >= 1000 && ms < 2500)
+	{
+		float start = ms * -0.03f + 250.0f;
+		m_LeftBottomBar.SetArc(m_LeftBottomBar.GetRadius(), start, m_LeftBottomBar.GetRadian());
+		m_LeftBottomBar.Draw();
+	}
+	if(ms >= 1000 && ms < 2500)
+	{
+		float start = ms * -0.03f + 115.0f;
+		m_RightUpBar.SetArc(m_RightUpBar.GetRadius(), start, m_RightUpBar.GetRadian());
+		m_RightUpBar.Draw();
+	}
+	if(ms >= 1000 && ms < 2500)
+	{
+		float start = ms * 0.03f + 290.0f;
+		m_RightBottomBar.SetArc(m_RightBottomBar.GetRadius(), start, m_RightBottomBar.GetRadian());
+		m_RightBottomBar.Draw();
+	}
+	if(ms >= 2000 && ms < 2500)
+	{
+		m_LeftUpBlock.Draw();
+		m_LeftBottomBlock.Draw();
+		m_RightUpBlock.Draw();
+		m_RightBottomBlock.Draw();
+	}
+	if(ms >= 1000 && ms < 2500)
 	{
 		m_LeftOutter.Draw();
 		m_RightOutter.Draw();
 	}
+	if(ms >= 3000 && ms < 3500)
+	{
+		float alpha = ms * 0.002f + -6.0f;
+		m_Billboard->SetAlpha(alpha);
+		m_TripComputer.Draw();
+		m_Assistance.Draw();
+		m_EcoStatistics.Draw();
+		m_SkinSettings.Draw();
+		m_Service.Draw();
+		m_EcoSide.Draw();
+	}
+	if(ms >= 3000 && ms < 3500)
+	{
+		m_Billboard->SetAlpha(1.0f);
+		m_LeftSide.Draw();
+	}
+	if(ms >= 3000 && ms < 3500)
+	{
+		float alpha = ms * -0.002f + 7.0f;
+		m_Billboard->SetAlpha(alpha);
+		m_RightSide.Draw();
+	}
+	if(ms >= 2500 && ms < 3500)
+	{
+		m_Billboard->SetAlpha(1.0f);
+		m_LeftUpBar.Draw();
+		m_LeftBottomBar.Draw();
+		m_RightUpBar.Draw();
+		m_RightBottomBar.Draw();
+		m_LeftUpBlock.Draw();
+		m_LeftBottomBlock.Draw();
+		m_RightUpBlock.Draw();
+		m_RightBottomBlock.Draw();
+		m_LeftOutter.Draw();
+		m_RightOutter.Draw();
+	}
 	DisplayInstrument();
-	if(ms >= 2000)
+	if(ms >= 3500)
 	{
 		NextStep();
 	}
@@ -314,20 +421,31 @@ void DashBoard::Step3()
 void DashBoard::Step4()
 {
 	const long ms = m_Time - m_StepStart;
-	if(ms >= 0 && ms < 3000)
+	if(ms >= 0 && ms < 30000)
 	{
 		m_Billboard->SetAlpha(1.0f);
 		m_Background.Draw();
 		m_Center.Draw();
-		m_LeftOutter.Draw();
-		m_RightOutter.Draw();
+		m_LeftSide.Draw();
+		m_EcoSide.Draw();
+		m_LeftUpBar.Draw();
+		m_LeftBottomBar.Draw();
+		m_RightUpBar.Draw();
+		m_RightBottomBar.Draw();
 		m_LeftUpBlock.Draw();
 		m_LeftBottomBlock.Draw();
 		m_RightUpBlock.Draw();
 		m_RightBottomBlock.Draw();
+		m_LeftOutter.Draw();
+		m_RightOutter.Draw();
+		m_TripComputer.Draw();
+		m_Assistance.Draw();
+		m_EcoStatistics.Draw();
+		m_SkinSettings.Draw();
+		m_Service.Draw();
 	}
 	DisplayInstrument();
-	if(ms >= 3000)
+	if(ms >= 30000)
 	{
 		NextStep();
 	}
