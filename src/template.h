@@ -12,13 +12,21 @@
 class %classname%
 {
 public:
+    enum Direction
+    {
+        dStop,
+        dForward,
+        dBackward,
+    };
 	%classname%(Billboard* bb);
 	%classname%(const %classname%&) = delete;
 	~%classname%();
 	
 	void Draw();
 private:
+    long StepTime(long end);
 	long MicroSecond();
+	void PreviousStep();
 	void NextStep();
 
     void DisplayMph(long v);
@@ -38,6 +46,7 @@ private:
 	long m_Time;
 	long m_Second;
 	
+	Direction m_Dir;
 	size_t m_Step;
 
 %items%

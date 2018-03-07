@@ -8,6 +8,7 @@
  , m_MphProg(0.0f)
  , m_Billboard(bb)
  , m_Textures("./", "texture1.json")
+ , m_Dir(dStop)
  , m_Step(0)
 %constructline%
 {
@@ -35,6 +36,8 @@ void %classname%::Draw()
 		std::cout << "Frame time :" << m_Time << std::endl;
 	}
 	m_Billboard->Begin();
+	for(bool rendered = false;!rendered;)
+	{
 		switch(m_Step)
 		{
 			case 0:
@@ -44,7 +47,20 @@ void %classname%::Draw()
 			default:
 				break;
 		};
+	}
 	m_Billboard->End();
+}
+
+long %classname%::StepTime(long end)
+{
+    if(m_Dir == dForward)
+    {
+        return m_Time - m_StepStart;
+    }
+    else
+    {
+        return end - (m_Time - m_StepStart + 1);
+    }
 }
 
 long %classname%::MicroSecond()
@@ -61,7 +77,17 @@ long %classname%::MicroSecond()
 void %classname%::NextStep()
 {
 	++m_Step;
+	m_Dir = dForward;
 	m_StepStart = m_Time;
+	std::cout << "Step:" << m_Step << std::endl;
+}
+
+void %classname%::PreviousStep()
+{
+	++m_Step;
+	m_Dir = dBackward;
+	m_StepStart = m_Time;
+	std::cout << "Step:" << m_Step << std::endl;
 }
 
 void %classname%::DisplayMph(long v)
@@ -115,44 +141,47 @@ void %classname%::DisplayMph(long v)
 
 void %classname%::DisplayInstrument()
 {
-    //mph
-    long cv = m_CurrDatas.Speed;
-    long dv = m_DestDatas->Speed;
-
-    if(cv != dv)
+    if(m_Step < 5)
     {
-        m_MphProg += 0.1f;
-        if(m_MphProg > 1.0f)
-        {
-            m_CurrDatas.Speed = m_DestDatas->Speed;
-            m_MphProg = 0.0f;
+        //mph
+        long cv = m_CurrDatas.Speed;
+        long dv = m_DestDatas->Speed;
 
-            DisplayMph(dv);
+        if(cv != dv)
+        {
+            m_MphProg += 0.1f;
+            if(m_MphProg > 1.0f)
+            {
+                m_CurrDatas.Speed = m_DestDatas->Speed;
+                m_MphProg = 0.0f;
+
+                DisplayMph(dv);
+            }
+            else
+            {
+                float alpha = m_Billboard->GetAlpha();
+                m_Billboard->SetAlpha(alpha * (1.0f - m_MphProg));
+                DisplayMph(cv);
+                m_Billboard->SetAlpha(alpha * m_MphProg);
+                DisplayMph(dv);
+                m_Billboard->SetAlpha(alpha);
+            }
         }
         else
         {
-            float alpha = m_Billboard->GetAlpha();
-            m_Billboard->SetAlpha(alpha * (1.0f - m_MphProg));
             DisplayMph(cv);
-            m_Billboard->SetAlpha(alpha * m_MphProg);
-            DisplayMph(dv);
-            m_Billboard->SetAlpha(alpha);
         }
-    }
-    else
-    {
-        DisplayMph(cv);
-    }
     
-    //Engine speed
-    m_Enginespeed.SetProgress(std::min(1.0f, m_DestDatas->EngineSpeed / 8000.0f));
-    m_Enginespeed.Draw();
-    //GasOil
-    m_GasOil.SetProgress(std::min(1.0f, m_DestDatas->OilMass / 100.0f));
-    m_GasOil.Draw();
-    //Temperature
-    m_Temp.SetProgress(std::min(1.0f, m_DestDatas->WaterTemperature / 99.0f));
-    m_Temp.Draw();
+        //Engine speed
+        m_Enginespeed.SetProgress(std::min(1.0f, m_DestDatas->EngineSpeed / 8000.0f));
+        m_Enginespeed.Draw();
+        //GasOil
+        m_GasOil.SetProgress(std::min(1.0f, m_DestDatas->OilMass / 100.0f));
+        m_GasOil.Draw();
+        //Temperature
+        m_Temp.SetProgress(std::min(1.0f, m_DestDatas->WaterTemperature / 99.0f));
+        m_Temp.Draw();
+    }
 }
 
 %implement%

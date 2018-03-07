@@ -77,6 +77,9 @@ class Equation:
         self.A = e.get("a", None)
         self.B = e.get("b", None)
         self.C = e.get("c", None)
+        self.F = e.get("f", None)
+        self.D = e.get("d", None)
+        self.E = e.get("e", None)
 
     def str(self, var):
         ret = ""
@@ -90,6 +93,12 @@ class Equation:
             if len(ret) > 0:
                 ret += " + ";
             ret += "%0s" % self.C
+        if self.F:
+            if len(ret) > 0:
+                ret = "%s(%s)" % (self.F, ret)
+                if self.D:
+                    ret = "%s * %s + %s" % (self.D, ret, self.E)
+
         return ret
 
 class Animation:
@@ -123,25 +132,32 @@ class Step:
         self.Animations = []
     
     def Define(self):
-        return "\tvoid " + self.Name.title() + "();\n";
+        return "\tbool " + self.Name.title() + "();\n";
 
     def Call(self):
         return "\t\t\t\t" + self.Name.title() + "();\n";     
 
     def Implement(self, objs):
-        ret = "void " + g_ClassName + "::" + self.Name.title() + '''()
-{
-\tconst long ms = m_Time - m_StepStart;
-'''
-
-        alphaChanged = True;
         end = 0
         for a in self.Animations:
             if end < a.End:
                 end = a.End
-            ret += "\tif(ms >= " + str(a.Begin) + " && ms < " + str(a.End) + ''')
-\t{
-'''
+
+        ret = "bool " + g_ClassName + "::" + self.Name.title() + "()\n"
+        ret += "{\n"
+        
+        if end > 0:
+            ret += "\tconst long ms = StepTime(" + str(end) + ");\n"
+
+        alphaChanged = True;
+        for a in self.Animations:
+            if a.Begin != a.End:
+                ret += "\tif(ms >= " + str(a.Begin) + " && ms < " + str(a.End) + ")\n"
+            else:
+                ret += "if(true)\n"
+            
+            ret += "\t{\n"
+
             if a.Alpha:
                 ret += "\t\tfloat alpha = " + a.Alpha.str("ms") + ";\n"
                 ret += "\t\tm_Billboard->SetAlpha(alpha);\n"
@@ -219,13 +235,27 @@ class Step:
             for i in a.Items:
                 ret += "\t\tm_" + i + ".Draw();\n"
             ret += "\t}\n"
-            
-        ret += "\tDisplayInstrument();\n"
-
-        ret += "\tif(ms >= " + str(end) + ")\n"
-        ret += "\t{\n"
-        ret += "\t\tNextStep();\n"
-        ret += "\t}\n"
+        
+        if end == 0:
+            ret += "\tDisplayInstrument();\n"
+            ret += "\treturn true;\n"
+        else:
+            ret += "\tif(ms < 0)\n"
+            ret += "\t{\n"
+            ret += "\t\tPreviousStep();\n"
+            ret += "\t\treturn false;"
+            ret += "\t}\n"
+            ret += "\tif(ms < " + str(end) + ")\n"
+            ret += "\t{\n"
+            ret += "\t\tDisplayInstrument();\n"
+            ret += "\t\treturn true;\n"
+            ret += "\t}\n"
+            ret += "\telse"
+            ret += "\t{\n"
+            ret += "\t\tNextStep();\n"
+            ret += "\t\treturn false;"
+            ret += "\t}\n"
+        
         ret += "}\n"
         
         return ret
@@ -345,7 +375,7 @@ out = ""
 index = 0
 for a in animateList:
 	index += 1
-	out += "\t\t\tcase " + str(index) + ":\n" + a.Call() + "\t\t\t\tbreak;\n"
+	out += "\t\t\tcase " + str(index) + ":\nrendered = " + a.Call() + "\t\t\t\tbreak;\n"
 template = template.replace("%steps%", out)
 
 out = ""

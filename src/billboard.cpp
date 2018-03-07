@@ -302,7 +302,16 @@ void Billboard::SetAlpha(float alpha)
     if(m_Alpha != alpha)
     {
         m_Alpha = alpha;
-	    glUniform1f(m_AlphaLocation, m_Alpha);
+        if(m_Alpha > 1.0f)
+        {
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+    	    glUniform1f(m_AlphaLocation, m_Alpha - 1.0f);
+        }
+        else
+        {
+        	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    	    glUniform1f(m_AlphaLocation, m_Alpha);
+        }
 	}
 }
 

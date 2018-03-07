@@ -8,14 +8,14 @@
             "VerticalFlip": false,
             "HorizonalFlip": false,
             "x": "960.0f",
-            "y": "360.0f"
+            "y": "358.0f"
         },
         {
             "name":"Center",
             "rect":"center",
         	"type":"rect",
             "x": "960.0f",
-            "y": "360.0f"
+            "y": "358.0f"
         },
         {
             "name":"Enginespeed",
@@ -23,7 +23,7 @@
         	"type":"arc",
         	"slice":"64",
             "x": "960.0f",
-            "y": "360.0f",
+            "y": "358.0f",
             "radius": "250.0f",
             "start": "234.0f",
             "radian": "-288.0f"
@@ -34,7 +34,7 @@
         	"type":"arc",
         	"slice": "64",
             "x": "960.0f",
-            "y": "360.0f",
+            "y": "358.0f",
             "radius": "280.0f",
             "start": "230.0f",
             "radian": "-100.0f"
@@ -45,7 +45,7 @@
         	"type":"arc",
         	"slice":64,
             "x": "960.0f",
-            "y": "360.0f",
+            "y": "358.0f",
             "radius": "280.0f",
             "start": "-50.0f",
             "radian": "100.0f"
@@ -56,7 +56,7 @@
         	"type":"arc",
         	"slice": "32",
             "x": "960.0f",
-            "y": "360.0f",
+            "y": "358.0f",
             "radius": "900.0f",
             "start": "150.0f",
             "radian": "15.0f"
@@ -67,7 +67,7 @@
         	"type":"arc",
         	"slice": "32",
             "x": "960.0f",
-            "y": "360.0f",
+            "y": "358.0f",
             "radius": "900.0f",
             "start": "210.0f",
             "radian": "15.0f"
@@ -78,7 +78,7 @@
         	"type":"arc",
         	"slice": "32",
             "x": "960.0f",
-            "y": "360.0f",
+            "y": "358.0f",
             "radius": "900.0f",
             "start": "150.0f",
             "radian": "-15.0f"
@@ -89,7 +89,7 @@
         	"type":"arc",
         	"slice":32,
             "x": "960.0f",
-            "y": "360.0f",
+            "y": "358.0f",
             "radius": "900.0f",
             "start": "210.0f",
             "radian": "-15.0f"
@@ -100,7 +100,7 @@
         	"type":"arc",
         	"slice": "64",
             "x": "960.0f",
-            "y": "360.0f",
+            "y": "358.0f",
             "radius": "925.0f",
             "start": "150.0f",
             "radian": "45.0f"
@@ -111,7 +111,7 @@
         	"type":"arc",
         	"slice": "64",
             "x": "960.0f",
-            "y": "360.0f",
+            "y": "358.0f",
             "radius": "925.0f",
             "start": "210.0f",
             "radian": "45.0f"
@@ -122,7 +122,7 @@
         	"type":"arc",
         	"slice": "64",
             "x": "960.0f",
-            "y": "360.0f",
+            "y": "358.0f",
             "radius": "925.0f",
             "start": "150.0f",
             "radian": "-45.0f"
@@ -133,7 +133,7 @@
         	"type":"arc",
         	"slice":64,
             "x": "960.0f",
-            "y": "360.0f",
+            "y": "358.0f",
             "radius": "925.0f",
             "start": "210.0f",
             "radian": "-45.0f"
@@ -145,7 +145,7 @@
             "VerticalFlip": false,
             "HorizonalFlip": false,
             "x": "460.0f",
-            "y": "360.0f"
+            "y": "358.0f"
         },
         {
             "name":"RightSide",
@@ -154,7 +154,7 @@
             "VerticalFlip": false,
             "HorizonalFlip": true,
             "x": "1460.0f",
-            "y": "360.0f"
+            "y": "358.0f"
         },
         {
             "name":"EcoSide",
@@ -163,7 +163,7 @@
             "VerticalFlip": false,
             "HorizonalFlip": false,
             "x": "1460.0f",
-            "y": "360.0f"
+            "y": "358.0f"
         },
         {
             "name":"GasOil",
@@ -171,7 +171,7 @@
         	"type":"arc",
         	"slice":32,
             "x": "960.0f",
-            "y": "360.0f",
+            "y": "358.0f",
             "radius": "203.0f",
             "start": "225.0f",
             "radian": "-90.0f"
@@ -182,7 +182,7 @@
         	"type":"arc",
         	"slice":32,
             "x": "960.0f",
-            "y": "360.0f",
+            "y": "358.0f",
             "radius": "203.0f",
             "start": "-45.0f",
             "radian": "90.0f"
@@ -212,7 +212,7 @@
             "VerticalFlip": false,
             "HorizonalFlip": false,
             "x": "400.0f",
-            "y": "360.0f"
+            "y": "358.0f"
         },
         {
             "name":"SkinSettings",
@@ -233,6 +233,66 @@
             "y": "200.0f"
         },
         {
+            "name":"Light",
+            "rect":"light",
+        	"type":"rect",
+            "VerticalFlip": false,
+            "HorizonalFlip": false,
+            "x": "710.0f",
+            "y": "600.0f"
+        },
+        {
+            "name":"EcoLight",
+            "rect":"light",
+        	"type":"rect",
+            "VerticalFlip": false,
+            "HorizonalFlip": false,
+            "x": "710.0f",
+            "y": "600.0f"
+        },
+        {
+            "name":"EcoBar",
+            "rect":"ecobar",
+        	"type":"arc",
+        	"slice":64,
+            "x": "1492.0f",
+            "y": "365.0f",
+            "radius": "116.0f",
+            "start": "247.5f",
+            "radian": "-315.0f"
+        },
+        {
+            "name":"OneLeaf",
+            "rect":"1leaf",
+        	"type":"rect",
+            "VerticalFlip": false,
+            "HorizonalFlip": false,
+            "x": "1384.0f",
+            "y": "265.0f"
+        },
+        {
+            "name":"LeftFunc",
+            "rect":"funcbar",
+        	"type":"arc",
+        	"slice": "64",
+            "x": "960.0f",
+            "y": "358.0f",
+            "radius": "740.0f",
+            "start": "230.0f",
+            "radian": "-100.0f"
+        },
+        {
+            "name":"RightFunc",
+            "rect":"funcbar",
+        	"type":"arc",
+        	"slice":64,
+            "x": "960.0f",
+            "y": "358.0f",
+            "radius": "740.0f",
+            "start": "-50.0f",
+            "radian": "100.0f"
+        },
+        {
             "name":"MphUnits",
             "rect":
             [
@@ -250,7 +310,7 @@
         	"type":"rect",
         	"slice":64,
             "x": "960.0f",
-            "y": "360.0f"
+            "y": "358.0f"
         }
 	],
 	"steps":
@@ -270,14 +330,6 @@
                 "alpha":
                 {
                     "b": "0.001f"
-                },
-                "x":
-                {
-                    "c": "960.0f"
-                },
-                "y":
-                {
-                    "c": "360.0f"
                 }
             }
 	    ],
@@ -285,7 +337,7 @@
 	    [
             {
                 "begin":0,
-                "end":3000,
+                "end":0,
                 "items":
                 [
                     "Background",
@@ -299,7 +351,7 @@
 	    [
             {
                 "begin":0,
-                "end":3500,
+                "end":4500,
                 "items":
                 [
                     "Background",
@@ -471,6 +523,23 @@
                 ]
             },
             {
+                "begin":2500,
+                "end":4500,
+                "items":
+                [
+                    "LeftUpBar",
+                    "LeftBottomBar",
+                    "RightUpBar",
+                    "RightBottomBar",
+                    "LeftUpBlock",
+                    "LeftBottomBlock",
+                    "RightUpBlock",
+                    "RightBottomBlock",
+                    "LeftOutter",
+                    "RightOutter"
+                ]
+            },
+            {
                 "begin":3000,
                 "end":3500,
                 "items":
@@ -480,7 +549,9 @@
                     "EcoStatistics",
                     "SkinSettings",
                     "Service",
-                    "EcoSide"
+                    "EcoSide",
+                    "EcoBar",
+                    "OneLeaf"
                 ],
                 "alpha":
                 {
@@ -510,28 +581,115 @@
                 }
             },
             {
-                "begin":2500,
-                "end":3500,
+                "begin":3500,
+                "end":4500,
                 "items":
                 [
-                    "LeftUpBar",
-                    "LeftBottomBar",
-                    "RightUpBar",
-                    "RightBottomBar",
-                    "LeftUpBlock",
-                    "LeftBottomBlock",
-                    "RightUpBlock",
-                    "RightBottomBlock",
-                    "LeftOutter",
-                    "RightOutter"
+                    "LeftSide",
+                    "EcoSide",
+                    "EcoBar",
+                    "OneLeaf",
+                    "TripComputer",
+                    "Assistance",
+                    "EcoStatistics",
+                    "SkinSettings",
+                    "Service"
                 ]
+            },
+            {
+                "begin":3500,
+                "end":3600,
+                "items":
+                [
+                    "Light"
+                ],
+                "x":
+                {
+                    "b":"-0.8f",
+                    "c":"3510.0f"
+                },
+                "alpha":
+                {
+                    "b":"0.01f",
+                    "c":"-34.1f"
+                }
+            },
+            {
+                "begin":3500,
+                "end":3900,
+                "items":
+                [
+                    "Light"
+                ],
+                "x":
+                {
+                    "b":"-0.8f",
+                    "c":"3510.0f"
+                },
+                "alpha":
+                {
+                    "c":"2.0f"
+                }
+            },
+            {
+                "begin":3900,
+                "end":4000,
+                "items":
+                [
+                    "Light"
+                ],
+                "x":
+                {
+                    "b":"-0.8f",
+                    "c":"3510.0f"
+                },
+                "alpha":
+                {
+                    "b":"-0.01f",
+                    "c":"41.0f"
+                }
+            },
+            {
+                "begin":3500,
+                "end":3600,
+                "items":
+                [
+                    "EcoLight"
+                ],
+                "x":
+                {
+                    "b":"-0.8f",
+                    "c":"3510.0f"
+                },
+                "alpha":
+                {
+                    "b":"0.01f",
+                    "c":"-34.1f"
+                }
+            },
+            {
+                "begin":3500,
+                "end":3900,
+                "items":
+                [
+                    "EcoLight"
+                ],
+                "x":
+                {
+                    "b":"-0.8f",
+                    "c":"3510.0f"
+                },
+                "alpha":
+                {
+                    "c":"2.0f"
+                }
             }
 	    ],
 	    "step4":
 	    [
             {
                 "begin":0,
-                "end":30000,
+                "end":0,
                 "items":
                 [
                     "Background",
@@ -552,9 +710,156 @@
                     "Assistance",
                     "EcoStatistics",
                     "SkinSettings",
-                    "Service"
+                    "Service",
+                    "EcoBar",
+                    "OneLeaf"
                 ]
             }
-	    ]
+	    ],
+	    "step5":
+	    [
+            {
+                "begin":0,
+                "end":2000,
+                "items":
+                [
+                    "Background",
+                    "LeftUpBar",
+                    "LeftBottomBar",
+                    "RightUpBar",
+                    "RightBottomBar",
+                    "LeftUpBlock",
+                    "LeftBottomBlock",
+                    "RightUpBlock",
+                    "RightBottomBlock",
+                    "LeftOutter",
+                    "RightOutter"
+                ]
+            },
+            {
+                "begin":0,
+                "end":1000,
+                "items":
+                [
+                    "TripComputer",
+                    "Assistance",
+                    "EcoStatistics",
+                    "SkinSettings",
+                    "Service",
+                    "EcoBar",
+                    "OneLeaf"
+                ],
+                "alpha":
+                {
+                    "c":"1.0f",
+                    "b":"-0.001f"
+                }
+            },
+            {
+                "begin":0,
+                "end":1000,
+                "items":
+                [
+                    "Center",
+                    "LeftSide",
+                    "EcoSide"
+                ]
+            },
+            {
+                "begin":1000,
+                "end":2000,
+                "items":
+                [
+                    "Center"
+                ],
+                "alpha":
+                {
+                    "c":"2.0f",
+                    "b":"-0.001f"
+                }
+            },
+            {
+                "begin":1000,
+                "end":2000,
+                "items":
+                [
+                    "LeftSide"
+                ],
+                "x":
+                {
+                    "b": "-0.5f",
+                    "c": "970.0f"
+                }
+            },
+            {
+                "begin":1000,
+                "end":2000,
+                "items":
+                [
+                    "EcoSide"
+                ],
+                "x":
+                {
+                    "b": "0.5f",
+                    "c": "950.0f"
+                }
+            },
+            {
+                "begin":1000,
+                "end":2000,
+                "items":
+                [
+                    "LeftFunc"
+                ],
+                "start":
+                {
+                    "c":"430.0",
+                    "b":"-0.1f"
+                }
+            },
+            {
+                "begin":1000,
+                "end":2000,
+                "items":
+                [
+                    "RightFunc"
+                ],
+                "start":
+                {
+                    "c":"-250.0f",
+                    "b":"0.1f"
+                }
+            },
+            {
+                "begin":2000,
+                "end":20000,
+                "items":
+                [
+                    "LeftFunc",
+                    "RightFunc"
+                ]
+            }
+	    ],
+	    "step6":
+	    [
+            {
+                "begin":0,
+                "end":0,
+                "items":
+                [
+                    "Background",
+                    "LeftUpBar",
+                    "LeftBottomBar",
+                    "RightUpBar",
+                    "RightBottomBar",
+                    "LeftUpBlock",
+                    "LeftBottomBlock",
+                    "RightUpBlock",
+                    "RightBottomBlock",
+                    "LeftOutter",
+                    "RightOutter"
+                ]
+            }
+        ]
 	}
 }

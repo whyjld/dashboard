@@ -167,7 +167,7 @@ Window OGLContext::Createwindow(Display* display, GLXFBConfig& config)
 
 	Window win = XCreateWindow(display,
 	                          RootWindow(display, vi->screen), 
-                              0, 0, 960, 360, 0, vi->depth, InputOutput, 
+                              0, 360, 960, 360, 0, vi->depth, InputOutput, 
                               vi->visual, 
                               CWBorderPixel | CWColormap | CWEventMask,
                               &swa);
