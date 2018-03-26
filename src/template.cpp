@@ -74,20 +74,32 @@ long %classname%::MicroSecond()
 	return sec * 1000L + long(usec / 1000.0 + 0.5);
 }
 
-void %classname%::NextStep()
+void %classname%::PreviousStep()
 {
-	++m_Step;
-	m_Dir = dForward;
-	m_StepStart = m_Time;
+    if(m_Step > 1)
+    {
+        --m_Step;
+        m_Dir = dBackward;
+        m_StepStart = m_Time;
+	}
 	std::cout << "Step:" << m_Step << std::endl;
 }
 
-void %classname%::PreviousStep()
+void %classname%::NextStep()
 {
-	++m_Step;
-	m_Dir = dBackward;
-	m_StepStart = m_Time;
+    if(m_Step < StepCount)
+    {
+        ++m_Step;
+        m_Dir = dForward;
+        m_StepStart = m_Time;
+	}
 	std::cout << "Step:" << m_Step << std::endl;
+}
+
+void %classname%::Stop()
+{
+	m_Dir = dStop;
+	std::cout << "Step stop." << std::endl;
 }
 
 void %classname%::DisplayMph(long v)

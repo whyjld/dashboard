@@ -39,6 +39,7 @@ CFLAGS += \
 
 OBJECTS += \
 	main.o \
+	udp.o \
 	tga.o \
 	texrect.o \
 	renderitem.o \

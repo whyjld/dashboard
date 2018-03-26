@@ -12,21 +12,38 @@
 class DashBoard
 {
 public:
+    enum Direction
+    {
+        dStop,
+        dForward,
+        dBackward,
+    };
+    
+    enum
+    {
+        StepCount = 6,
+    };
+
 	DashBoard(Billboard* bb);
 	DashBoard(const DashBoard&) = delete;
 	~DashBoard();
 	
 	void Draw();
 private:
+    long StepTime(long end);
 	long MicroSecond();
+	void PreviousStep();
 	void NextStep();
+	void Stop();
 
     void DisplayMph(long v);
     void DisplayInstrument();
-	void Step1();
-	void Step2();
-	void Step3();
-	void Step4();
+	bool Step1();
+	bool Step2();
+	bool Step3();
+	bool Step4();
+	bool Step5();
+	bool Step6();
 
 
 	ShareMemory<Datas> m_DestDatas;
@@ -42,6 +59,7 @@ private:
 	long m_Time;
 	long m_Second;
 	
+	Direction m_Dir;
 	size_t m_Step;
 
 	RectItem m_Background;
@@ -67,6 +85,12 @@ private:
 	RectItem m_EcoStatistics;
 	RectItem m_SkinSettings;
 	RectItem m_Service;
+	RectItem m_Light;
+	RectItem m_EcoLight;
+	ArcItem m_EcoBar;
+	RectItem m_OneLeaf;
+	ArcItem m_LeftFunc;
+	ArcItem m_RightFunc;
 	std::vector<RectItem> m_MphUnits;
 
 };

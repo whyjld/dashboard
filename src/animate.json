@@ -829,15 +829,6 @@
                     "c":"-250.0f",
                     "b":"0.1f"
                 }
-            },
-            {
-                "begin":2000,
-                "end":20000,
-                "items":
-                [
-                    "LeftFunc",
-                    "RightFunc"
-                ]
             }
 	    ],
 	    "step6":
@@ -857,7 +848,9 @@
                     "RightUpBlock",
                     "RightBottomBlock",
                     "LeftOutter",
-                    "RightOutter"
+                    "RightOutter",
+                    "LeftFunc",
+                    "RightFunc"
                 ]
             }
         ]

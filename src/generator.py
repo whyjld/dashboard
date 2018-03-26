@@ -148,13 +148,15 @@ class Step:
         
         if end > 0:
             ret += "\tconst long ms = StepTime(" + str(end) + ");\n"
+        else:
+            ret += "\tif(m_Dir != dStop)\n\t{\n\t\tStop();\n\t}\n"
 
         alphaChanged = True;
         for a in self.Animations:
             if a.Begin != a.End:
                 ret += "\tif(ms >= " + str(a.Begin) + " && ms < " + str(a.End) + ")\n"
             else:
-                ret += "if(true)\n"
+                ret += "\tif(true)\n"
             
             ret += "\t{\n"
 
@@ -237,24 +239,43 @@ class Step:
             ret += "\t}\n"
         
         if end == 0:
-            ret += "\tDisplayInstrument();\n"
-            ret += "\treturn true;\n"
+            ret += '''
+    if(m_DestDatas->View < 0)
+    {
+        m_DestDatas->View = 0;
+        PreviousStep();
+        return false;
+    }
+    else if(m_DestDatas->View > 0)
+    {
+        m_DestDatas->View = 0;
+        NextStep();
+        return false;
+    }
+    else
+    {
+        DisplayInstrument();
+        return true;
+    }
+'''
         else:
-            ret += "\tif(ms < 0)\n"
-            ret += "\t{\n"
-            ret += "\t\tPreviousStep();\n"
-            ret += "\t\treturn false;"
-            ret += "\t}\n"
-            ret += "\tif(ms < " + str(end) + ")\n"
-            ret += "\t{\n"
-            ret += "\t\tDisplayInstrument();\n"
-            ret += "\t\treturn true;\n"
-            ret += "\t}\n"
-            ret += "\telse"
-            ret += "\t{\n"
-            ret += "\t\tNextStep();\n"
-            ret += "\t\treturn false;"
-            ret += "\t}\n"
+            ret += '''
+    if(ms < 0)
+    {
+        PreviousStep();
+        return false;
+    }
+    else if(ms < ''' + str(end) + ''')
+    {
+        DisplayInstrument();
+        return true;
+    }
+    else
+    {
+        NextStep();
+        return false;
+    }
+'''
         
         ret += "}\n"
         
@@ -346,6 +367,9 @@ out = ""
 for a in animateList:
     out += a.Define()
 template = template.replace("%defines%", out)
+
+out = str(len(animateList))
+template = template.replace("%stepcount%", out);
 
 out = ""
 for o in objectList:

@@ -18,6 +18,12 @@ public:
         dForward,
         dBackward,
     };
+    
+    enum
+    {
+        StepCount = %stepcount%,
+    };
+
 	%classname%(Billboard* bb);
 	%classname%(const %classname%&) = delete;
 	~%classname%();
@@ -28,6 +34,7 @@ private:
 	long MicroSecond();
 	void PreviousStep();
 	void NextStep();
+	void Stop();
 
     void DisplayMph(long v);
     void DisplayInstrument();
