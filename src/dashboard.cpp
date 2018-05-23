@@ -194,6 +194,10 @@ void DashBoard::PreviousStep()
         m_Dir = dBackward;
         m_StepStart = m_Time;
 	}
+	else
+	{
+		m_Dir = dForward;
+	}
 	std::cout << "Step:" << m_Step << std::endl;
 }
 
